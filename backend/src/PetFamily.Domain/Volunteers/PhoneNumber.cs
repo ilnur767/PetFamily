@@ -9,6 +9,9 @@ public class PhoneNumber : ComparableValueObject
     private const string PhoneNumberMatchPattern =
         @"^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$";
 
+    // ef
+    private PhoneNumber() { }
+    
     private PhoneNumber(string phoneNumber)
     {
         Value = phoneNumber;

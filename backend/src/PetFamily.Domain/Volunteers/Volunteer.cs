@@ -7,9 +7,10 @@ namespace PetFamily.Domain.Volunteers;
 public class Volunteer : Entity<VolunteerId>
 {
     private readonly List<Pet> _pets = [];
-    private readonly List<Requisite> _requisites = [];
-    private readonly List<SocialMedia> _socialMedias = [];
 
+    // ef
+    private Volunteer() { }
+    
     public Volunteer(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber) : base(id)
     {
         FullName = fullName;
@@ -23,13 +24,15 @@ public class Volunteer : Entity<VolunteerId>
 
     public string? Description { get; private set; }
 
-    public int? WorkExperienceExperience { get; private set; }
+    public int? WorkExperience { get; private set; }
 
     public PhoneNumber PhoneNumber { get; private set; }
 
+    public SocialMediaList? SocialMediasList { get; private set; }
+    
+    public RequisiteList? RequisiteList { get; private set; }
+    
     public IReadOnlyList<Pet> Pets => _pets;
-    public IReadOnlyList<Requisite> Requisites => _requisites;
-    public IReadOnlyList<SocialMedia> SocialMedias => _socialMedias;
 
     public int PetsFoundHomeCount => _pets.Count(p => p.Status == PetStatus.FoundHome);
     public int PetsLookingForHomeCount => _pets.Count(p => p.Status == PetStatus.LookingForHome);

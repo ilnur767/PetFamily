@@ -6,8 +6,9 @@ namespace PetFamily.Domain.Volunteers;
 
 public class Pet : Entity<PetId>
 {
-    private readonly List<Requisite> _requisite = [];
-
+    // ef
+    private Pet() { }
+    
     private Pet(PetId id, string nickName, PetSpecies petSpecies, PetStatus status) : base(id)
     {
         NickName = nickName;
@@ -42,7 +43,7 @@ public class Pet : Entity<PetId>
 
     public PetStatus Status { get; private set; } = default!;
 
-    public IReadOnlyList<Requisite> Requisites => _requisite;
+    public RequisiteList RequisiteList { get; set; }
 
     public DateTime CreatedAt { get; private set; }
 

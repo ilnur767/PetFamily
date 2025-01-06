@@ -6,6 +6,9 @@ namespace PetFamily.Domain.Volunteers;
 
 public class FullName : ComparableValueObject
 {
+    // ef
+    private FullName() { }
+    
     public FullName(string firstName, string lastName, string middleName)
     {
         FirstName = firstName;

@@ -9,6 +9,9 @@ public class Email : ComparableValueObject
     private const string EmailMatchPattern =
         @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
 
+    // ef
+    private Email() { }
+    
     private Email(string emailAddress)
     {
         Address = emailAddress;
