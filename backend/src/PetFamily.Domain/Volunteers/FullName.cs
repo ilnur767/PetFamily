@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using CSharpFunctionalExtensions;
+using PetFamily.Domain.Common;
 using static PetFamily.Domain.Common.ValidationMessageConstants;
+using static PetFamily.Domain.Common.Errors;
 
 namespace PetFamily.Domain.Volunteers;
 
@@ -9,7 +11,7 @@ public class FullName : ComparableValueObject
     // ef
     private FullName() { }
     
-    public FullName(string firstName, string lastName, string middleName)
+    private FullName(string firstName, string lastName, string middleName)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -20,7 +22,7 @@ public class FullName : ComparableValueObject
     public string LastName { get; }
     public string MiddleName { get; }
 
-    public static Result<FullName> Create(string firstName, string lastName, string middleName)
+    public static Result<FullName,Error > Create(string firstName, string lastName, string middleName)
     {
         var errorMessage = new StringBuilder();
 
@@ -41,10 +43,10 @@ public class FullName : ComparableValueObject
 
         if (errorMessage.Length > 0)
         {
-            return Result.Failure<FullName>(errorMessage.ToString());
+            return Error.Validation(InvalidValueCode, errorMessage.ToString());
         }
 
-        return Result.Success(new FullName(firstName, lastName, middleName));
+        return new FullName(firstName, lastName, middleName);
     }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()

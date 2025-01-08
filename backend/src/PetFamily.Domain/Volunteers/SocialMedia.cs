@@ -1,6 +1,8 @@
 using System.Text;
 using CSharpFunctionalExtensions;
+using PetFamily.Domain.Common;
 using static PetFamily.Domain.Common.ValidationMessageConstants;
+using static PetFamily.Domain.Common.Errors;
 
 namespace PetFamily.Domain.Volunteers;
 
@@ -15,7 +17,7 @@ public class SocialMedia : ComparableValueObject
     public string Name { get; }
     public string Link { get; }
 
-    public static Result<SocialMedia> Create(string name, string link)
+    public static Result<SocialMedia, Error> Create(string name, string link)
     {
         var errorMessage = new StringBuilder();
 
@@ -31,10 +33,10 @@ public class SocialMedia : ComparableValueObject
 
         if (errorMessage.Length > 0)
         {
-            return Result.Failure<SocialMedia>(errorMessage.ToString());
+            return Error.Validation(InvalidValueCode, errorMessage.ToString());
         }
 
-        return Result.Success(new SocialMedia(name, link));
+        return new SocialMedia(name, link);
     }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
