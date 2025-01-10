@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
-using static PetFamily.Domain.Common.ValidationMessageConstants;
+using PetFamily.Domain.Common;
 
 namespace PetFamily.Domain.Volunteers;
 
@@ -19,14 +19,14 @@ public class Email : ComparableValueObject
 
     public string Address { get; }
 
-    public static Result<Email> Create(string email)
+    public static Result<Email, Error> Create(string email)
     {
         if (!Regex.IsMatch(email, EmailMatchPattern))
         {
-            return Result.Failure<Email>(string.Format(InvalidPropertyTemplate, nameof(PhoneNumber)));
+            return Errors.General.ValueIsInvalid(nameof(Email));
         }
 
-        return Result.Success(new Email(email));
+        return new Email(email);
     }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()

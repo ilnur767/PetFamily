@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using CSharpFunctionalExtensions;
+using PetFamily.Domain.Common;
 using static PetFamily.Domain.Common.ValidationMessageConstants;
+using static PetFamily.Domain.Common.Errors;
 
 namespace PetFamily.Domain.Volunteers;
 
@@ -38,7 +40,7 @@ public class Volunteer : Entity<VolunteerId>
     public int PetsLookingForHomeCount => _pets.Count(p => p.Status == PetStatus.LookingForHome);
     public int PetsNeedsHelpCount => _pets.Count(p => p.Status == PetStatus.NeedsHelp);
 
-    public static Result<Volunteer> Create(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber)
+    public static Result<Volunteer, Error> Create(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber)
     {
         var errorMessage = new StringBuilder();
         
@@ -59,9 +61,19 @@ public class Volunteer : Entity<VolunteerId>
 
         if (errorMessage.Length > 0)
         {
-            return Result.Failure<Volunteer>(errorMessage.ToString());
+            return Error.Validation(InvalidValueCode, errorMessage.ToString());
         }
 
-        return Result.Success(new Volunteer(id, fullName!, email!, phoneNumber!));
+        return new Volunteer(id, fullName!, email!, phoneNumber!);
+    }
+
+    public void AddRequisites(IEnumerable<Requisite> requisites)
+    {
+        RequisiteList = RequisiteList.Create(requisites.ToList());
+    }
+    
+    public void AddSocialMedias(IEnumerable<SocialMedia> socialMedias)
+    {
+        SocialMediasList = SocialMediaList.Create(socialMedias.ToList());
     }
 }

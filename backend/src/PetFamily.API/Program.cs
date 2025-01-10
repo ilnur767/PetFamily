@@ -1,11 +1,14 @@
-using PetFamily.Infrastructure;
+using PetFamily.Application.Inject;
+using PetFamily.Infrastructure.Inject;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 
-builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 
@@ -17,5 +20,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.MapControllers();
 app.Run();
