@@ -7,4 +7,4 @@ public record CreateVolunteerCommand(
     string Email,
     string PhoneNumber,
     IEnumerable<CreateRequisiteCommand>? Requisites,
-    IEnumerable<CreateSocialMediaCommand>? SocialMediaCommands);
+    IEnumerable<CreateSocialMediaCommand>? SocialMedias);
