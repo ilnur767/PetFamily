@@ -40,33 +40,6 @@ public class Volunteer : Entity<VolunteerId>
     public int PetsLookingForHomeCount => _pets.Count(p => p.Status == PetStatus.LookingForHome);
     public int PetsNeedsHelpCount => _pets.Count(p => p.Status == PetStatus.NeedsHelp);
 
-    public static Result<Volunteer, Error> Create(VolunteerId id, FullName fullName, Email email, PhoneNumber phoneNumber)
-    {
-        var errorMessage = new StringBuilder();
-        
-        if (fullName is null)
-        {
-            errorMessage.AppendLine(string.Format(EmptyPropertyTemplate, nameof(FullName)));
-        }
-
-        if (email is null)
-        {
-            errorMessage.AppendLine(string.Format(EmptyPropertyTemplate, nameof(Email)));
-        }
-
-        if (phoneNumber is null)
-        {
-            errorMessage.AppendLine(string.Format(EmptyPropertyTemplate, nameof(PhoneNumber)));
-        }
-
-        if (errorMessage.Length > 0)
-        {
-            return Error.Validation(InvalidValueCode, errorMessage.ToString());
-        }
-
-        return new Volunteer(id, fullName!, email!, phoneNumber!);
-    }
-
     public void AddRequisites(IEnumerable<Requisite> requisites)
     {
         RequisiteList = RequisiteList.Create(requisites.ToList());
