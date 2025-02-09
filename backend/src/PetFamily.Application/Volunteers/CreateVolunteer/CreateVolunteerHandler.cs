@@ -2,6 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.CreateVolunteer;
@@ -11,11 +12,13 @@ public sealed class CreateVolunteerHandler
 {
     private readonly IVolunteersRepository _volunteersRepository;
     private readonly IValidator<CreateVolunteerCommand> _validator;
+    private readonly ILogger<CreateVolunteerHandler> _logger;
 
-    public CreateVolunteerHandler(IVolunteersRepository volunteersRepository, IValidator<CreateVolunteerCommand> validator)
+    public CreateVolunteerHandler(IVolunteersRepository volunteersRepository, IValidator<CreateVolunteerCommand> validator, ILogger<CreateVolunteerHandler> logger)
     {
         _volunteersRepository = volunteersRepository;
         _validator = validator;
+        _logger = logger;
     }
     
     public async Task<Result<Guid, ValidationResult>> Handle(CreateVolunteerCommand command, CancellationToken cancellationToken)
@@ -51,6 +54,8 @@ public sealed class CreateVolunteerHandler
         }
 
         await _volunteersRepository.Add(volunteer, cancellationToken);
+        
+        _logger.LogInformation("Created volunteer with id: {volunteerId}", volunteer.Id.Value);
 
         return (Guid)volunteer.Id;
     }
