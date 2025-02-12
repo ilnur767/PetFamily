@@ -1,26 +1,12 @@
+using System.Reflection;
 using PetFamily.API;
+using PetFamily.API.Common;
 using PetFamily.API.Middlewares;
-using PetFamily.Application.Inject;
-using PetFamily.Infrastructure.Inject;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.Debug()
-    .WriteTo.Seq(builder.Configuration.GetConnectionString("Seq") ?? throw new ArgumentNullException("Seq"))
-    .CreateLogger();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
-
-builder.Services.AddHttpLogging(o => { });
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
-
-builder.Services.AddSerilog();
+builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
 app.UseExceptionMiddleware();

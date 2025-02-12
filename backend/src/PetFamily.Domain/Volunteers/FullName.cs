@@ -9,8 +9,10 @@ namespace PetFamily.Domain.Volunteers;
 public class FullName : ComparableValueObject
 {
     // ef
-    private FullName() { }
-    
+    private FullName()
+    {
+    }
+
     private FullName(string firstName, string lastName, string middleName)
     {
         FirstName = firstName;
@@ -22,7 +24,7 @@ public class FullName : ComparableValueObject
     public string LastName { get; }
     public string MiddleName { get; }
 
-    public static Result<FullName,Error > Create(string firstName, string lastName, string middleName)
+    public static Result<FullName, Error> Create(string firstName, string lastName, string middleName)
     {
         var errorMessage = new StringBuilder();
 

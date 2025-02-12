@@ -1,13 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using FluentValidation.Results;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer;
+namespace PetFamily.Application.Volunteers.Create;
 
-[UsedImplicitly]
 public sealed class CreateVolunteerHandler
 {
     private readonly IVolunteersRepository _volunteersRepository;
@@ -45,12 +43,12 @@ public sealed class CreateVolunteerHandler
 
         if (requisites != null && requisites.Count != 0)
         {
-            volunteer.AddRequisites(requisites);
+            volunteer.UpdateRequisites(requisites);
         }
 
         if (socialMedias != null && socialMedias.Count != 0)
         {
-            volunteer.AddSocialMedias(socialMedias);
+            volunteer.UpdateSocialMedias(socialMedias);
         }
 
         await _volunteersRepository.Add(volunteer, cancellationToken);
