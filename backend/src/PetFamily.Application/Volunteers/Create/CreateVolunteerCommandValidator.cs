@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Volunteers;
 
-namespace PetFamily.Application.Volunteers.CreateVolunteer;
+namespace PetFamily.Application.Volunteers.Create;
 
 [UsedImplicitly]
 public sealed class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
