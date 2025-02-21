@@ -1,8 +1,8 @@
-﻿using CSharpFunctionalExtensions;
+﻿using PetFamily.Domain.Common;
 
 namespace PetFamily.Domain.Volunteers;
 
-public class Volunteer : Entity<VolunteerId>
+public class Volunteer : SoftDeletableEntity<VolunteerId>
 {
     private readonly List<Pet> _pets = [];
 

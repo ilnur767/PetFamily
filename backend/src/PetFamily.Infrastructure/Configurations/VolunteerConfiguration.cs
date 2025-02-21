@@ -23,28 +23,25 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 .IsRequired()
                 .HasColumnName("first_name")
                 .HasMaxLength(MaxLowTextLength);
-            
+
             name.Property(n => n.LastName)
                 .IsRequired()
                 .HasColumnName("last_name")
                 .HasMaxLength(MaxLowTextLength);
-            
+
             name.Property(n => n.MiddleName)
                 .IsRequired()
                 .HasColumnName("middle_name")
                 .HasMaxLength(MaxLowTextLength);
         });
 
-        builder.OwnsOne(v=>v.Email, email =>
-            {
-                email.Property(n => n.Address).HasMaxLength(MaxLowTextLength);
-            });
-        
+        builder.OwnsOne(v => v.Email, email => { email.Property(n => n.Address).HasMaxLength(MaxLowTextLength); });
+
         builder.Property(v => v.Description)
             .HasMaxLength(MaxHighTextLength);
 
         builder.Property(v => v.WorkExperience);
-        
+
         builder.OwnsOne(v => v.PhoneNumber, ph =>
         {
             ph.Property(n => n.Value)
@@ -67,16 +64,19 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 sm.Property(s => s.Link).IsRequired().HasMaxLength(MaxLowTextLength);
             });
         });
-        
+
         builder.OwnsOne(v => v.RequisiteList, rl =>
         {
             rl.ToJson();
-            
-            rl.OwnsMany(s=>s.Requisites, r =>
+
+            rl.OwnsMany(s => s.Requisites, r =>
             {
-                r.Property(s=>s.Name).IsRequired().HasMaxLength(MaxLowTextLength);
-                r.Property(s=>s.Description).IsRequired().HasMaxLength(MaxLowTextLength);
+                r.Property(s => s.Name).IsRequired().HasMaxLength(MaxLowTextLength);
+                r.Property(s => s.Description).IsRequired().HasMaxLength(MaxLowTextLength);
             });
         });
+
+        builder.Property(v => v.IsDeleted).HasColumnName("is_deleted");
+        builder.Property(v => v.DeletedAt).HasColumnName("deleted_at");
     }
 }

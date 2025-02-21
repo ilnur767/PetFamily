@@ -22,7 +22,7 @@ public static class ServicesInstaller
 
         services.AddHttpLogging(o => { });
         services.AddApplication();
-        services.AddInfrastructure();
+        services.AddInfrastructure(configuration);
 
         services.AddSerilog();
 
