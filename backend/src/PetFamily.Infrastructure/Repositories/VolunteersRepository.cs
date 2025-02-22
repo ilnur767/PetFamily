@@ -45,4 +45,12 @@ public class VolunteersRepository : IVolunteersRepository
         _context.Volunteers.Attach(volunteer);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<Guid> HardDelete(Volunteer volunteer, CancellationToken cancellationToken = default)
+    {
+        _context.Volunteers.Remove(volunteer);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return volunteer.Id.Value;
+    }
 }

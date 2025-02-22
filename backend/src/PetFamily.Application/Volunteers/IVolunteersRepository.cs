@@ -32,4 +32,12 @@ public interface IVolunteersRepository
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Идентификатор волонтера.</returns>
     public Task Save(Volunteer volunteer, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    ///     Полное удаление волонтера.
+    /// </summary>
+    /// <param name="volunteer">Сущность волонетера.</param>
+    /// <param name="cancellationToken">Токен отмены.</param>
+    /// <returns>Идентификатор волонтера.</returns>
+    public Task<Guid> HardDelete(Volunteer volunteer, CancellationToken cancellationToken = default);
 }

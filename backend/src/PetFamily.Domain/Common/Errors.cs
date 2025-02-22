@@ -19,7 +19,7 @@ public static class Errors
         {
             var forId = id == null ? "" : $" for Id '{id}'";
             
-            return Error.NotFound(RecordNotFoundCode, $"record not found {forId}");
+            return Error.NotFound(RecordNotFoundCode, $"record not found{forId}");
         }
 
         public static Error ValueIsRequired(string? name = null)
