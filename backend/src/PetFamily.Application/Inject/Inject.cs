@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using PetFamily.Application.Files.AddFile;
+using PetFamily.Application.Files.DeleteFile;
+using PetFamily.Application.Files.GetFileLink;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.HardDelete;
 using PetFamily.Application.Volunteers.Restore;
@@ -21,6 +24,9 @@ public static class Inject
         services.AddScoped<HardDeleteVolunteerHandler>();
         services.AddScoped<SoftDeleteVolunteerHandler>();
         services.AddScoped<RestoreVolunteerHandler>();
+        services.AddScoped<AddFileHandler>();
+        services.AddScoped<GetFileLinkHandler>();
+        services.AddScoped<DeleteFileHandler>();
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
         return services;
