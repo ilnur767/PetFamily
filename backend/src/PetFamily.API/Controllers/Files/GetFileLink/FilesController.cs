@@ -11,13 +11,13 @@ public class FilesController : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<string>> GetFileLink(
-        [FromServices] GetFileLinkHandler getFileLinkHandlerHandler,
+        [FromServices] GetFileLinkHandler getFileLinkHandler,
         [FromQuery] string fileName,
         [FromQuery] string bucketName,
         CancellationToken cancellationToken)
     {
         var command = new GetFileLinkCommand(fileName, bucketName);
-        var result = await getFileLinkHandlerHandler.Handle(command, cancellationToken);
+        var result = await getFileLinkHandler.Handle(command, cancellationToken);
 
         if (result.IsFailure)
         {
