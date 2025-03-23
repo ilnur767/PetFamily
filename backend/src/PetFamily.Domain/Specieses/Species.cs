@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Common;
 using static PetFamily.Domain.Common.ValidationMessageConstants;
+using static PetFamily.Domain.Common.Errors;
 
 namespace PetFamily.Domain.Specieses;
 
@@ -24,5 +26,16 @@ public class Species : Entity<SpeciesId>
         }
 
         return Result.Success(new Species(id, name));
+    }
+
+    public Result<Breed, Error> GetBreedById(Guid id)
+    {
+        var breed = Breeds.FirstOrDefault(b => b.Id.Value.Equals(id));
+        if (breed == null)
+        {
+            return Error.NotFound(RecordNotFoundCode, $"Breed not found for {id}");
+        }
+
+        return breed;
     }
 }

@@ -1,4 +1,5 @@
-﻿using PetFamily.Domain.Common;
+﻿using CSharpFunctionalExtensions;
+using PetFamily.Domain.Common;
 
 namespace PetFamily.Domain.Volunteers;
 
@@ -34,9 +35,9 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
 
     public IReadOnlyList<Pet> Pets => _pets;
 
-    public int PetsFoundHomeCount => _pets.Count(p => p.Status == PetStatus.FoundHome);
-    public int PetsLookingForHomeCount => _pets.Count(p => p.Status == PetStatus.LookingForHome);
-    public int PetsNeedsHelpCount => _pets.Count(p => p.Status == PetStatus.NeedsHelp);
+    public int PetsFoundHomeCount => _pets.Count(p => p.Status.Status == PetStatusValue.FoundHome);
+    public int PetsLookingForHomeCount => _pets.Count(p => p.Status.Status == PetStatusValue.LookingForHome);
+    public int PetsNeedsHelpCount => _pets.Count(p => p.Status.Status == PetStatusValue.NeedsHelp);
 
     public void UpdateRequisites(IEnumerable<Requisite> requisites)
     {
@@ -56,6 +57,23 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
         PhoneNumber = phoneNumber;
         Description = description;
         WorkExperience = workExperience;
+    }
+
+    public void AddPet(Pet pet)
+    {
+        _pets.Add(pet);
+    }
+
+    public Result<Pet, Error> GetPetById(Guid id)
+    {
+        var pet = _pets.FirstOrDefault(p => p.Id.Value == id);
+
+        if (pet == null)
+        {
+            return Errors.General.NotFound(id);
+        }
+
+        return pet;
     }
 
     public void UpdateRequisites(SocialMediaList socialMediasList)

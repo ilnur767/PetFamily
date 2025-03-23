@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetFamily.Application.Common;
 using PetFamily.Application.FileProvider;
+using PetFamily.Application.Species;
 using PetFamily.Application.Volunteers;
 using PetFamily.Infrastructure.BackgroundServices;
 using PetFamily.Infrastructure.Providers;
@@ -42,6 +43,7 @@ public static class Inject
         });
 
         services.AddScoped<IFileProvider, MinioProvider>();
+        services.AddScoped<ISpeciesRepository, SpeciesRepository>();
         return services;
     }
 }
