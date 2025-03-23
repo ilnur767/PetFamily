@@ -7,13 +7,18 @@ namespace PetFamily.Domain.Volunteers;
 public class Pet : Entity<PetId>
 {
     // ef
-    private Pet() { }
-    
-    private Pet(PetId id, string nickName, PetSpecies petSpecies, PetStatus status) : base(id)
+    private Pet()
+    {
+    }
+
+    private Pet(PetId id, string nickName, PetSpecies petSpecies, PetStatus status, string description,
+        PhoneNumber phoneNumber) : base(id)
     {
         NickName = nickName;
         PetSpecies = petSpecies;
         Status = status;
+        Description = description;
+        PhoneNumber = phoneNumber;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -21,33 +26,46 @@ public class Pet : Entity<PetId>
 
     public PetSpecies PetSpecies { get; private set; }
 
-    public string? Description { get; private set; } = default!;
+    public string? Description { get; private set; }
 
-    public string? Color { get; private set;}
+    public string? Color { get; }
 
     public string? HealthInformation { get; private set; } = default!;
 
     public string? Address { get; private set; } = default!;
 
-    public double? Weight { get; private set;}
+    public double? Weight { get; }
 
-    public double? Height { get; private set;}
+    public double? Height { get; }
 
-    public PhoneNumber? PhoneNumber { get; private set; }
+    public PhoneNumber? PhoneNumber { get; }
 
-    public bool? IsCastrated { get; private set;}
+    public bool? IsCastrated { get; }
 
-    public DateTime? DateOfBirth { get; private set;}
+    public DateTime? DateOfBirth { get; }
 
-    public bool? IsVaccinated { get; private set;}
+    public bool? IsVaccinated { get; }
 
     public PetStatus Status { get; private set; } = default!;
 
-    public RequisiteList RequisiteList { get; set; }
+    public RequisiteList? RequisiteList { get; set; }
+
+    public PetPhotosList? PhotosList { get; set; }
 
     public DateTime CreatedAt { get; private set; }
 
-    public static Result<Pet> Create(PetId id, string nickName, PetSpecies petSpecies, PetStatus status)
+    public void AddPhotos(PetPhotosList petPhotosList)
+    {
+        PhotosList = petPhotosList;
+    }
+
+    public void DeletePhotos(PetPhotosList petPhotosList)
+    {
+        PhotosList = petPhotosList;
+    }
+
+    public static Result<Pet> Create(PetId id, string nickName, string description, PhoneNumber phoneNumber,
+        PetSpecies petSpecies, PetStatus status)
     {
         var errorMessage = new StringBuilder();
 
@@ -66,6 +84,6 @@ public class Pet : Entity<PetId>
             return Result.Failure<Pet>(errorMessage.ToString());
         }
 
-        return Result.Success<Pet>(new Pet(id, nickName, petSpecies, status));
+        return Result.Success(new Pet(id, nickName, petSpecies, status, description, phoneNumber));
     }
 }

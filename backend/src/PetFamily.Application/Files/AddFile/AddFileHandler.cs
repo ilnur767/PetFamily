@@ -16,7 +16,7 @@ public class AddFileHandler
     public async Task<Result<string, Error>> Handle(AddFileCommand fileCommand, CancellationToken cancellationToken)
     {
         var result = await _fileProvider.UploadFile(
-            new FileData(fileCommand.Stream, fileCommand.BucketName, fileCommand.FileName), cancellationToken);
+            new FileData(fileCommand.Stream, fileCommand.FileName), fileCommand.BucketName, cancellationToken);
 
         if (result.IsFailure)
         {
