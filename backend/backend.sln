@@ -17,6 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AEA7AF91-BA08-4CB3-9BE6-B21C718B5AD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Domain.UnitTests", "PetFamily.Domain.UnitTests\PetFamily.Domain.UnitTests.csproj", "{7730C0DF-4103-4D61-A82C-8B1012B16C5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +46,12 @@ Global
 		{6FF2D41D-6C21-4455-9BF2-0F0F91A38913}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FF2D41D-6C21-4455-9BF2-0F0F91A38913}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FF2D41D-6C21-4455-9BF2-0F0F91A38913}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7730C0DF-4103-4D61-A82C-8B1012B16C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7730C0DF-4103-4D61-A82C-8B1012B16C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7730C0DF-4103-4D61-A82C-8B1012B16C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7730C0DF-4103-4D61-A82C-8B1012B16C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7730C0DF-4103-4D61-A82C-8B1012B16C5D} = {AEA7AF91-BA08-4CB3-9BE6-B21C718B5AD8}
 	EndGlobalSection
 EndGlobal

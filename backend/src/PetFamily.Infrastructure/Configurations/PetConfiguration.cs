@@ -74,5 +74,14 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 r.Property(s => s.FilePath).IsRequired().HasMaxLength(MaxLowTextLength);
             });
         });
+
+
+        builder.OwnsOne(p => p.Position, sr =>
+        {
+            sr.Property(s => s.Value)
+                .IsRequired()
+                .HasMaxLength(MaxLowTextLength)
+                .HasColumnName("position");
+        });
     }
 }
