@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Application.FileProvider;
 using PetFamily.Domain.Common;
+using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Application.Files.DeleteFile;
 
@@ -15,7 +16,7 @@ public sealed class DeleteFileHandler
 
     public async Task<UnitResult<Error>> Handle(DeleteFileCommand command, CancellationToken cancellationToken)
     {
-        var result = await _fileProvider.DeleteFile(command.FileName, command.BucketName, cancellationToken);
+        var result = await _fileProvider.DeleteFile(new FileInfo(command.FileName, command.BucketName), cancellationToken);
 
         if (result.IsFailure)
         {

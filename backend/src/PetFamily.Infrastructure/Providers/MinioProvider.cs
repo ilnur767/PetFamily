@@ -5,6 +5,7 @@ using Minio;
 using Minio.DataModel.Args;
 using PetFamily.Application.FileProvider;
 using PetFamily.Domain.Common;
+using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Infrastructure.Providers;
 
@@ -21,22 +22,22 @@ public class MinioProvider : IFileProvider
         _logger = logger;
     }
 
-    public async Task<Result<string, Error>> UploadFile(FileData fileData, string bucketName, CancellationToken cancellationToken)
+    public async Task<Result<string, Error>> UploadFile(FileData fileData, CancellationToken cancellationToken)
     {
         try
         {
-            var bucketExistArgs = new BucketExistsArgs().WithBucket(bucketName);
+            var bucketExistArgs = new BucketExistsArgs().WithBucket(fileData.Info.BucketName);
 
             var bucketExists = await _minioClient.BucketExistsAsync(bucketExistArgs, cancellationToken);
 
             if (bucketExists == false)
             {
-                var makeBucketArgs = new MakeBucketArgs().WithBucket(bucketName);
+                var makeBucketArgs = new MakeBucketArgs().WithBucket(fileData.Info.BucketName);
 
                 await _minioClient.MakeBucketAsync(makeBucketArgs, cancellationToken);
             }
 
-            var path = $"{Guid.NewGuid()}_{fileData.FileName}";
+            var path = $"{Guid.NewGuid()}_{fileData.Info.FilePath}";
 
             var putObjectArgs = new PutObjectArgs()
                 .WithBucket("photos")
@@ -64,7 +65,7 @@ public class MinioProvider : IFileProvider
         {
             await CreateBucketIfNotExists(cancellationToken, bucketName);
 
-            var tasks = files.Select(async file => await CreateFile(file, bucketName, semaphore, cancellationToken));
+            var tasks = files.Select(async file => await CreateFile(file, semaphore, cancellationToken));
 
             var result = await Task.WhenAll(tasks);
 
@@ -107,12 +108,23 @@ public class MinioProvider : IFileProvider
         }
     }
 
-    public async Task<UnitResult<Error>> DeleteFile(string fileName, string bucketName,
+    public async Task<UnitResult<Error>> DeleteFile(FileInfo file,
         CancellationToken cancellationToken)
     {
         try
         {
-            var removeObjectArgs = new RemoveObjectArgs().WithBucket(bucketName).WithObject(fileName);
+            var statArgs = new StatObjectArgs()
+                .WithBucket(file.BucketName)
+                .WithObject(file.FilePath);
+
+            var objectStat = await _minioClient.StatObjectAsync(statArgs, cancellationToken);
+
+            if (objectStat == null)
+            {
+                return Result.Success<Error>();
+            }
+
+            var removeObjectArgs = new RemoveObjectArgs().WithBucket(file.BucketName).WithObject(file.FilePath);
 
             await _minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
 
@@ -160,16 +172,16 @@ public class MinioProvider : IFileProvider
         return new UnitResult<Error>();
     }
 
-    private async Task<Result<string, Error>> CreateFile(FileData file, string bucketName, SemaphoreSlim semaphore,
+    private async Task<Result<string, Error>> CreateFile(FileData file, SemaphoreSlim semaphore,
         CancellationToken cancellationToken)
     {
         await semaphore.WaitAsync(cancellationToken);
 
         var putObjectArgs = new PutObjectArgs()
-            .WithBucket(bucketName)
+            .WithBucket(file.Info.BucketName)
             .WithStreamData(file.Stream)
             .WithObjectSize(file.Stream.Length)
-            .WithObject(file.FileName);
+            .WithObject(file.Info.FilePath);
 
         try
         {
@@ -181,8 +193,8 @@ public class MinioProvider : IFileProvider
         {
             _logger.LogError(ex,
                 "Fail to upload file in minio with path {path} in bucket {bucket}",
-                file.FileName,
-                bucketName);
+                file.Info.FilePath,
+                file.Info.BucketName);
 
             return Error.Failure("file.upload", "Fail to upload file in minio");
         }
