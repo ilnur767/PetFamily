@@ -9,10 +9,9 @@ public interface IFileProvider
     ///     Загрузить файл в хранилище.
     /// </summary>
     /// <param name="fileData">Информация о файле.</param>
-    /// <param name="bucketName">Наименование бакета.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns>Наименование файла в хранилище.</returns>
-    public Task<Result<string, Error>> UploadFile(FileData fileData, string bucketName, CancellationToken cancellationToken);
+    public Task<Result<string, Error>> UploadFile(FileData fileData, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Загрузить файл в хранилище.
@@ -37,10 +36,9 @@ public interface IFileProvider
     /// <summary>
     ///     Удалить файл из хранилища.
     /// </summary>
-    /// <param name="fileName">Наименование файла.</param>
-    /// <param name="bucketName">Наименование бакета.</param>
+    /// <param name="file">Информация о файле.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    public Task<UnitResult<Error>> DeleteFile(string fileName, string bucketName, CancellationToken cancellationToken);
+    public Task<UnitResult<Error>> DeleteFile(FileInfo file, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Удалить файл из хранилища.

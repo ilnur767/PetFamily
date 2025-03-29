@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Application.FileProvider;
 using PetFamily.Domain.Common;
+using FileInfo = PetFamily.Application.FileProvider.FileInfo;
 
 namespace PetFamily.Application.Files.AddFile;
 
@@ -16,7 +17,7 @@ public class AddFileHandler
     public async Task<Result<string, Error>> Handle(AddFileCommand fileCommand, CancellationToken cancellationToken)
     {
         var result = await _fileProvider.UploadFile(
-            new FileData(fileCommand.Stream, fileCommand.FileName), fileCommand.BucketName, cancellationToken);
+            new FileData(fileCommand.Stream, new FileInfo(fileCommand.FileName, fileCommand.BucketName)), cancellationToken);
 
         if (result.IsFailure)
         {
