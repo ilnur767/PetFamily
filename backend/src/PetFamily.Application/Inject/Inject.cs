@@ -5,6 +5,7 @@ using PetFamily.Application.Files.DeleteFile;
 using PetFamily.Application.Files.GetFileLink;
 using PetFamily.Application.Volunteers.AddPet;
 using PetFamily.Application.Volunteers.AddPetPhoto;
+using PetFamily.Application.Volunteers.ChangePetPosition;
 using PetFamily.Application.Volunteers.Create;
 using PetFamily.Application.Volunteers.DeletePetPhoto;
 using PetFamily.Application.Volunteers.HardDelete;
@@ -33,6 +34,7 @@ public static class Inject
         services.AddScoped<AddPetCommandHandler>();
         services.AddScoped<AddPetPhotoCommandHandler>();
         services.AddScoped<DeletePetPhotoCommandHandler>();
+        services.AddScoped<ChangePetPositionHandler>();
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
         return services;

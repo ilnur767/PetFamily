@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using CSharpFunctionalExtensions;
+using PetFamily.Domain.Common;
 using static PetFamily.Domain.Common.ValidationMessageConstants;
 
 namespace PetFamily.Domain.Volunteers;
@@ -11,7 +12,10 @@ public class Pet : Entity<PetId>
     {
     }
 
-    private Pet(PetId id, string nickName, PetSpecies petSpecies, PetStatus status, string description,
+    private Pet(PetId id, string nickName,
+        PetSpecies petSpecies,
+        PetStatus status,
+        string description,
         PhoneNumber phoneNumber) : base(id)
     {
         NickName = nickName;
@@ -54,6 +58,9 @@ public class Pet : Entity<PetId>
 
     public DateTime CreatedAt { get; private set; }
 
+
+    public Position Position { get; private set; } = default!;
+
     public void AddPhotos(PetPhotosList petPhotosList)
     {
         PhotosList = petPhotosList;
@@ -62,6 +69,11 @@ public class Pet : Entity<PetId>
     public void DeletePhotos(PetPhotosList petPhotosList)
     {
         PhotosList = petPhotosList;
+    }
+
+    public void SetPosition(Position position)
+    {
+        Position = position;
     }
 
     public static Result<Pet> Create(PetId id, string nickName, string description, PhoneNumber phoneNumber,
@@ -85,5 +97,38 @@ public class Pet : Entity<PetId>
         }
 
         return Result.Success(new Pet(id, nickName, petSpecies, status, description, phoneNumber));
+    }
+
+    public UnitResult<Error> MoveForward()
+    {
+        var newPosition = Position.Forward();
+
+        if (newPosition.IsFailure)
+        {
+            return newPosition.Error;
+        }
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
+    }
+
+    public UnitResult<Error> MoveBack()
+    {
+        var newPosition = Position.Back();
+
+        if (newPosition.IsFailure)
+        {
+            return newPosition.Error;
+        }
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
+    }
+
+    public void Move(Position newPosition)
+    {
+        Position = newPosition;
     }
 }

@@ -18,7 +18,7 @@ public class Species : Entity<SpeciesId>
 
     public IReadOnlyList<Breed> Breeds => _breeds;
 
-    public Result<Species> Create(SpeciesId id, string name)
+    public static Result<Species> Create(SpeciesId id, string name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {

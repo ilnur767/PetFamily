@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
-using Minio.DataModel.Response;
 using PetFamily.Application.FileProvider;
 using PetFamily.Domain.Common;
 
@@ -64,17 +63,17 @@ public class MinioProvider : IFileProvider
         try
         {
             await CreateBucketIfNotExists(cancellationToken, bucketName);
-            var tasks = new List<Task<PutObjectResponse>>();
 
-            foreach (var file in files)
-            {
-                var fileResult = CreateFile(file, bucketName, semaphore, cancellationToken);
-                tasks.Add(fileResult);
-            }
+            var tasks = files.Select(async file => await CreateFile(file, bucketName, semaphore, cancellationToken));
 
             var result = await Task.WhenAll(tasks);
 
-            return result.Select(l => l.ObjectName).ToList();
+            if (result.Any(r => r.IsFailure))
+            {
+                return result.First().Error;
+            }
+
+            return result.Select(r => r.Value).ToList();
         }
         catch (Exception ex)
         {
@@ -131,31 +130,37 @@ public class MinioProvider : IFileProvider
     {
         var semaphore = new SemaphoreSlim(MaxParallelCount);
 
-        foreach (var fileName in filesPath)
+        try
         {
-            await semaphore.WaitAsync(cancellationToken);
+            var tasks = filesPath.Select(async fileName =>
+            {
+                await semaphore.WaitAsync(cancellationToken);
 
-            try
-            {
-                var removeObjectArgs = new RemoveObjectArgs().WithBucket(bucketName).WithObject(fileName);
+                try
+                {
+                    var removeObjectArgs = new RemoveObjectArgs().WithBucket(bucketName).WithObject(fileName);
 
-                _minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Fail to delete file from minio");
-                return Error.Failure("file.delete", "Fail to delete file from minio");
-            }
-            finally
-            {
-                semaphore.Release();
-            }
+                    await _minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
+            });
+            await Task.WhenAll(tasks);
         }
+
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Fail to delete files from minio");
+            return Error.Failure("file.delete", "Fail to delete files from minio");
+        }
+
 
         return new UnitResult<Error>();
     }
 
-    private async Task<PutObjectResponse> CreateFile(FileData file, string bucketName, SemaphoreSlim semaphore,
+    private async Task<Result<string, Error>> CreateFile(FileData file, string bucketName, SemaphoreSlim semaphore,
         CancellationToken cancellationToken)
     {
         await semaphore.WaitAsync(cancellationToken);
@@ -166,7 +171,25 @@ public class MinioProvider : IFileProvider
             .WithObjectSize(file.Stream.Length)
             .WithObject(file.FileName);
 
-        return await _minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
+        try
+        {
+            var result = await _minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
+
+            return result.ObjectName;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Fail to upload file in minio with path {path} in bucket {bucket}",
+                file.FileName,
+                bucketName);
+
+            return Error.Failure("file.upload", "Fail to upload file in minio");
+        }
+        finally
+        {
+            semaphore.Release();
+        }
     }
 
     private async Task CreateBucketIfNotExists(CancellationToken cancellationToken, string bucketName)

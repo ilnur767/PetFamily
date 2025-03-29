@@ -59,9 +59,20 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
         WorkExperience = workExperience;
     }
 
-    public void AddPet(Pet pet)
+    public UnitResult<Error> AddPet(Pet pet)
     {
+        var serialNumber = Position.Create(_pets.Count + 1);
+
+        if (serialNumber.IsFailure)
+        {
+            return serialNumber.Error;
+        }
+
+        pet.SetPosition(serialNumber.Value);
+
         _pets.Add(pet);
+
+        return new UnitResult<Error>();
     }
 
     public Result<Pet, Error> GetPetById(Guid id)
@@ -79,5 +90,84 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
     public void UpdateRequisites(SocialMediaList socialMediasList)
     {
         SocialMediasList = socialMediasList;
+    }
+
+    public UnitResult<Error> MovePet(Pet pet, Position newPosition)
+    {
+        var currentPosition = pet.Position;
+
+        if (currentPosition == newPosition || _pets.Count == 1)
+        {
+            return Result.Success<Error>();
+        }
+
+        var adjustPosition = AdjustNewPositionIfOutOfRange(newPosition);
+
+        if (adjustPosition.IsFailure)
+        {
+            return adjustPosition.Error;
+        }
+
+        newPosition = adjustPosition.Value;
+
+        var moveResult = MovePetsBetweenPositions(newPosition, currentPosition);
+        if (moveResult.IsFailure)
+        {
+            return moveResult.Error;
+        }
+
+        pet.Move(newPosition);
+
+        return Result.Success<Error>();
+    }
+
+    private UnitResult<Error> MovePetsBetweenPositions(Position newPosition, Position currentPosition)
+    {
+        if (newPosition < currentPosition)
+        {
+            var petsToMove = _pets.Where(p => p.Position >= newPosition
+                                              && p.Position < currentPosition);
+            foreach (var petToMove in petsToMove)
+            {
+                var result = petToMove.MoveForward();
+
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+            }
+        }
+        else if (newPosition > currentPosition)
+        {
+            var petsToMove = _pets.Where(p => p.Position > currentPosition
+                                              && p.Position <= newPosition);
+            foreach (var petToMove in petsToMove)
+            {
+                var result = petToMove.MoveBack();
+
+                if (result.IsFailure)
+                {
+                    return result.Error;
+                }
+            }
+        }
+
+        return Result.Success<Error>();
+    }
+
+    private Result<Position, Error> AdjustNewPositionIfOutOfRange(Position newPosition)
+    {
+        if (newPosition <= _pets.Count)
+        {
+            return newPosition;
+        }
+
+        var lastPosition = Position.Create(_pets.Count - 1);
+        if (lastPosition.IsFailure)
+        {
+            return lastPosition.Error;
+        }
+
+        return lastPosition;
     }
 }

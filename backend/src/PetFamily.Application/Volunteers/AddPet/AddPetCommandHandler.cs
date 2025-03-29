@@ -49,7 +49,13 @@ public sealed class AddPetCommandHandler
         var petId = PetId.NewPetId();
         var pet = Pet.Create(petId, command.NickName, command.Description, phoneNumber, petSpecies, petStatus);
 
-        volunteer.Value.AddPet(pet.Value);
+        var result = volunteer.Value.AddPet(pet.Value);
+
+        if (result.IsFailure)
+        {
+            return result.Error;
+        }
+
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);
 
         return petId.Value;
