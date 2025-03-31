@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.AddPetPhoto;
 using static PetFamily.API.Extensions.ResponseExtensions;
@@ -20,7 +19,6 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid petId,
         [FromForm] IFormFileCollection files,
         [FromServices] AddPetPhotoCommandHandler addPetPhotoCommandHandler,
-        [FromServices] IValidator<AddPetPhotoCommand> validator,
         CancellationToken cancellationToken)
     {
         List<UploadPhotoDto> filesDto = [];
@@ -33,13 +31,6 @@ public class VolunteersController : ControllerBase
             }
 
             var command = new AddPetPhotoCommand(id, petId, filesDto);
-
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-
-            if (validationResult.IsValid == false)
-            {
-                return validationResult.ToResponse();
-            }
 
             var result = await addPetPhotoCommandHandler.Handle(command, cancellationToken);
             if (result.IsFailure)

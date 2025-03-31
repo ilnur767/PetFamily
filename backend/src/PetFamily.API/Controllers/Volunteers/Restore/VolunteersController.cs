@@ -21,7 +21,7 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var result = await restoreVolunteerHandler.Handle(new RestoreVolunteerRequest(id), cancellationToken);
+        var result = await restoreVolunteerHandler.Handle(new RestoreVolunteerCommand(id), cancellationToken);
 
         if (result.IsFailure)
         {

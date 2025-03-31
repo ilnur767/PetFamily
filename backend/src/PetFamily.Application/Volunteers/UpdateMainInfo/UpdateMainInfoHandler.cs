@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Volunteers;
 
@@ -8,22 +10,33 @@ namespace PetFamily.Application.Volunteers.UpdateMainInfo;
 public class UpdateMainInfoHandler
 {
     private readonly ILogger<UpdateMainInfoHandler> _logger;
+    private readonly IValidator<UpdateMainInfoCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public UpdateMainInfoHandler(IVolunteersRepository volunteersRepository,
-        ILogger<UpdateMainInfoHandler> logger)
+    public UpdateMainInfoHandler(
+        IVolunteersRepository volunteersRepository,
+        ILogger<UpdateMainInfoHandler> logger,
+        IValidator<UpdateMainInfoCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
         _logger = logger;
+        _validator = validator;
     }
 
-    public async Task<Result<Guid, Error>> Handle(UpdateMainInfoCommand command,
+    public async Task<Result<Guid, ErrorList>> Handle(UpdateMainInfoCommand command,
         CancellationToken cancellationToken = default)
     {
+        var validation = await _validator.ValidateAsync(command, cancellationToken);
+
+        if (validation.IsValid == false)
+        {
+            return validation.ToErrorList();
+        }
+
         var volunteerResult = await _volunteersRepository.GetById(command.Id, cancellationToken);
         if (volunteerResult.IsFailure)
         {
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
         }
 
         var volunteer = volunteerResult.Value;

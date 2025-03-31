@@ -21,7 +21,7 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var result = await hardDeleteVolunteerHandler.Handle(new HardDeleteVolunteerRequest(id), cancellationToken);
+        var result = await hardDeleteVolunteerHandler.Handle(new HardDeleteVolunteerCommand(id), cancellationToken);
 
         if (result.IsFailure)
         {

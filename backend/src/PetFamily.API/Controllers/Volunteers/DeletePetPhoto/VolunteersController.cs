@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Application.Volunteers.DeletePetPhoto;
 using static PetFamily.API.Extensions.ResponseExtensions;
 
@@ -19,17 +18,9 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid petId,
         [FromBody] DeletePetPhotosRequest request,
         [FromServices] DeletePetPhotoCommandHandler addPetPhotoCommandHandler,
-        [FromServices] IValidator<DeletePetPhotoCommand> validator,
         CancellationToken cancellationToken)
     {
         var command = new DeletePetPhotoCommand(id, petId, request.FilesPath);
-
-        var validationResult = await validator.ValidateAsync(command, cancellationToken);
-
-        if (validationResult.IsValid == false)
-        {
-            return validationResult.ToResponse();
-        }
 
         var result = await addPetPhotoCommandHandler.Handle(command, cancellationToken);
         if (result.IsFailure)

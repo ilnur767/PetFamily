@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
 using PetFamily.Domain.Common;
@@ -12,17 +14,31 @@ public class AddPetPhotoCommandHandler
     private const string PhotosBucketName = "photo";
     private readonly IFileProvider _fileProvider;
     private readonly IMessageQueue<IEnumerable<FileInfo>> _messageQueue;
+    private readonly IValidator<AddPetPhotoCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public AddPetPhotoCommandHandler(IVolunteersRepository volunteersRepository, IFileProvider fileProvider, IMessageQueue<IEnumerable<FileInfo>> messageQueue)
+
+    public AddPetPhotoCommandHandler(
+        IVolunteersRepository volunteersRepository,
+        IFileProvider fileProvider,
+        IMessageQueue<IEnumerable<FileInfo>> messageQueue,
+        IValidator<AddPetPhotoCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
         _fileProvider = fileProvider;
         _messageQueue = messageQueue;
+        _validator = validator;
     }
 
-    public async Task<Result<IReadOnlyCollection<string>, Error>> Handle(AddPetPhotoCommand command, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<string>, ErrorList>> Handle(AddPetPhotoCommand command, CancellationToken cancellationToken)
     {
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+        if (validationResult.IsValid == false)
+        {
+            return validationResult.ToErrorList();
+        }
+
         var filesData = new List<FileData>();
         var photos = new List<Photo>();
 
@@ -41,7 +57,7 @@ public class AddPetPhotoCommandHandler
         {
             await _messageQueue.WriteAsync(filesData.Select(f => f.Info), cancellationToken);
 
-            return result.Error;
+            return result.Error.ToErrorList();
         }
 
         var savePhotoResult = await SaveToDb(command, cancellationToken, photos);
@@ -51,7 +67,7 @@ public class AddPetPhotoCommandHandler
             await _messageQueue.WriteAsync(filesData.Select(f => f.Info), cancellationToken);
         }
 
-        return result;
+        return result.Value.ToList();
     }
 
     private async Task<UnitResult<Error>> SaveToDb(AddPetPhotoCommand command, CancellationToken cancellationToken, List<Photo> photos)

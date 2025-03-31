@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Common;
 
 namespace PetFamily.Application.Volunteers.Restore;
@@ -7,22 +9,31 @@ namespace PetFamily.Application.Volunteers.Restore;
 public class RestoreVolunteerHandler
 {
     private readonly ILogger<RestoreVolunteerHandler> _logger;
+    private readonly IValidator<RestoreVolunteerCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
     public RestoreVolunteerHandler(IVolunteersRepository volunteersRepository,
-        ILogger<RestoreVolunteerHandler> logger)
+        ILogger<RestoreVolunteerHandler> logger, IValidator<RestoreVolunteerCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
         _logger = logger;
+        _validator = validator;
     }
 
-    public async Task<Result<Guid, Error>> Handle(RestoreVolunteerRequest softDeleteVolunteerRequest,
+    public async Task<Result<Guid, ErrorList>> Handle(RestoreVolunteerCommand restoreVolunteerCommand,
         CancellationToken cancellationToken)
     {
-        var volunteerResult = await _volunteersRepository.GetById(softDeleteVolunteerRequest.VolunteerId);
+        var validationResult = await _validator.ValidateAsync(restoreVolunteerCommand, cancellationToken);
+
+        if (validationResult.IsValid == false)
+        {
+            return validationResult.ToErrorList();
+        }
+
+        var volunteerResult = await _volunteersRepository.GetById(restoreVolunteerCommand.VolunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
         {
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
         }
 
         var volunteer = volunteerResult.Value;
@@ -37,4 +48,4 @@ public class RestoreVolunteerHandler
     }
 }
 
-public record RestoreVolunteerRequest(Guid VolunteerId);
+public record RestoreVolunteerCommand(Guid VolunteerId);
