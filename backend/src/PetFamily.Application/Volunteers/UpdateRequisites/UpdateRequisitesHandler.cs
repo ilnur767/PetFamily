@@ -14,7 +14,9 @@ public sealed class UpdateRequisitesHandler
     private readonly IValidator<UpdateRequisitesCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public UpdateRequisitesHandler(ILogger<UpdateMainInfoHandler> logger, IVolunteersRepository volunteersRepository,
+    public UpdateRequisitesHandler(
+        ILogger<UpdateMainInfoHandler> logger,
+        IVolunteersRepository volunteersRepository,
         IValidator<UpdateRequisitesCommand> validator)
     {
         _logger = logger;

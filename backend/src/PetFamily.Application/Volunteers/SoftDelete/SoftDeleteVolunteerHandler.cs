@@ -13,8 +13,11 @@ public sealed class SoftDeleteVolunteerHandler
     private readonly IValidator<SoftDeleteVolunteerCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public SoftDeleteVolunteerHandler(IVolunteersRepository volunteersRepository,
-        ILogger<SoftDeleteVolunteerHandler> logger, TimeProvider timeProvider, IValidator<SoftDeleteVolunteerCommand> validator)
+    public SoftDeleteVolunteerHandler(
+        IVolunteersRepository volunteersRepository,
+        ILogger<SoftDeleteVolunteerHandler> logger,
+        TimeProvider timeProvider,
+        IValidator<SoftDeleteVolunteerCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
         _logger = logger;

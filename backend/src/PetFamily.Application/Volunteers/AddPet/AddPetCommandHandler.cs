@@ -42,7 +42,6 @@ public sealed class AddPetCommandHandler
         if (speices.IsFailure)
         {
             return speices.Error.ToErrorList();
-            ;
         }
 
         var breed = speices.Value.GetBreedById(command.BreedId);
@@ -50,7 +49,6 @@ public sealed class AddPetCommandHandler
         if (breed.IsFailure)
         {
             return breed.Error.ToErrorList();
-            ;
         }
 
         var petSpecies = new PetSpecies(SpeciesId.Create(speices.Value.Id), BreedId.Create(command.BreedId));
@@ -67,7 +65,6 @@ public sealed class AddPetCommandHandler
         if (result.IsFailure)
         {
             return result.Error.ToErrorList();
-            ;
         }
 
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);

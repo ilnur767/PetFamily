@@ -18,7 +18,10 @@ public class AddPetPhotoCommandHandler
     private readonly IVolunteersRepository _volunteersRepository;
 
 
-    public AddPetPhotoCommandHandler(IVolunteersRepository volunteersRepository, IFileProvider fileProvider, IMessageQueue<IEnumerable<FileInfo>> messageQueue,
+    public AddPetPhotoCommandHandler(
+        IVolunteersRepository volunteersRepository,
+        IFileProvider fileProvider,
+        IMessageQueue<IEnumerable<FileInfo>> messageQueue,
         IValidator<AddPetPhotoCommand> validator)
     {
         _volunteersRepository = volunteersRepository;

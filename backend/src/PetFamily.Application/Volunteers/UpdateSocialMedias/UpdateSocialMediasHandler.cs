@@ -13,7 +13,9 @@ public sealed class UpdateSocialMediasHandler
     private readonly IValidator<UpdateSocialMediasCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public UpdateSocialMediasHandler(ILogger<UpdateSocialMediasHandler> logger, IVolunteersRepository volunteersRepository,
+    public UpdateSocialMediasHandler(
+        ILogger<UpdateSocialMediasHandler> logger,
+        IVolunteersRepository volunteersRepository,
         IValidator<UpdateSocialMediasCommand> validator)
     {
         _logger = logger;

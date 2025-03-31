@@ -13,8 +13,10 @@ public class UpdateMainInfoHandler
     private readonly IValidator<UpdateMainInfoCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public UpdateMainInfoHandler(IVolunteersRepository volunteersRepository,
-        ILogger<UpdateMainInfoHandler> logger, IValidator<UpdateMainInfoCommand> validator)
+    public UpdateMainInfoHandler(
+        IVolunteersRepository volunteersRepository,
+        ILogger<UpdateMainInfoHandler> logger,
+        IValidator<UpdateMainInfoCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
         _logger = logger;

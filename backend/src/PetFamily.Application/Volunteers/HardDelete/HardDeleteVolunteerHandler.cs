@@ -12,8 +12,10 @@ public sealed class HardDeleteVolunteerHandler
     private readonly IValidator<HardDeleteVolunteerCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public HardDeleteVolunteerHandler(IVolunteersRepository volunteersRepository,
-        ILogger<HardDeleteVolunteerHandler> logger, IValidator<HardDeleteVolunteerCommand> validator)
+    public HardDeleteVolunteerHandler(
+        IVolunteersRepository volunteersRepository,
+        ILogger<HardDeleteVolunteerHandler> logger,
+        IValidator<HardDeleteVolunteerCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
         _logger = logger;

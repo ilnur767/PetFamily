@@ -17,7 +17,10 @@ public sealed class DeletePetPhotoCommandHandler
     private readonly IValidator<DeletePetPhotoCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public DeletePetPhotoCommandHandler(IFileProvider fileProvider, IVolunteersRepository volunteersRepository, IValidator<DeletePetPhotoCommand> validator)
+    public DeletePetPhotoCommandHandler(
+        IFileProvider fileProvider,
+        IVolunteersRepository volunteersRepository,
+        IValidator<DeletePetPhotoCommand> validator)
     {
         _fileProvider = fileProvider;
         _volunteersRepository = volunteersRepository;
