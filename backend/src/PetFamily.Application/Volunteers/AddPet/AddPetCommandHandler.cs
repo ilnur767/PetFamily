@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
+using PetFamily.Application.Extensions;
 using PetFamily.Application.Species;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Specieses;
@@ -10,34 +12,45 @@ public sealed class AddPetCommandHandler
 {
     private readonly ISpeciesRepository _speciesRepository;
     private readonly IVolunteersRepository _volunteersRepository;
+    private readonly IValidator<AddPetCommand> validator;
 
-    public AddPetCommandHandler(IVolunteersRepository volunteersRepository, ISpeciesRepository speciesRepository)
+    public AddPetCommandHandler(IVolunteersRepository volunteersRepository, ISpeciesRepository speciesRepository, IValidator<AddPetCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
         _speciesRepository = speciesRepository;
+        this.validator = validator;
     }
 
-    public async Task<Result<Guid, Error>> Handle(AddPetCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid, ErrorList>> Handle(AddPetCommand command, CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+
+        if (validationResult.IsValid == false)
+        {
+            return validationResult.ToErrorList();
+        }
+
         var volunteer = await _volunteersRepository.GetById(command.VolunteerId, cancellationToken);
 
         if (volunteer.IsFailure)
         {
-            return volunteer.Error;
+            return volunteer.Error.ToErrorList();
         }
 
         var speices = await _speciesRepository.GetById(command.SpeciesId, cancellationToken);
 
         if (speices.IsFailure)
         {
-            return speices.Error;
+            return speices.Error.ToErrorList();
+            ;
         }
 
         var breed = speices.Value.GetBreedById(command.BreedId);
 
         if (breed.IsFailure)
         {
-            return breed.Error;
+            return breed.Error.ToErrorList();
+            ;
         }
 
         var petSpecies = new PetSpecies(SpeciesId.Create(speices.Value.Id), BreedId.Create(command.BreedId));
@@ -53,7 +66,8 @@ public sealed class AddPetCommandHandler
 
         if (result.IsFailure)
         {
-            return result.Error;
+            return result.Error.ToErrorList();
+            ;
         }
 
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);

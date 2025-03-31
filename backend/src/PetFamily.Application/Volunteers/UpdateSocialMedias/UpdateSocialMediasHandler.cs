@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetFamily.Application.Extensions;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Volunteers;
 
@@ -8,21 +10,31 @@ namespace PetFamily.Application.Volunteers.UpdateSocialMedias;
 public sealed class UpdateSocialMediasHandler
 {
     private readonly ILogger<UpdateSocialMediasHandler> _logger;
+    private readonly IValidator<UpdateSocialMediasCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public UpdateSocialMediasHandler(ILogger<UpdateSocialMediasHandler> logger, IVolunteersRepository volunteersRepository)
+    public UpdateSocialMediasHandler(ILogger<UpdateSocialMediasHandler> logger, IVolunteersRepository volunteersRepository,
+        IValidator<UpdateSocialMediasCommand> validator)
     {
         _logger = logger;
         _volunteersRepository = volunteersRepository;
+        _validator = validator;
     }
 
-    public async Task<Result<Guid, Error>> Handle(UpdateSocialMediasCommand command,
+    public async Task<Result<Guid, ErrorList>> Handle(UpdateSocialMediasCommand command,
         CancellationToken cancellationToken)
     {
+        var validation = await _validator.ValidateAsync(command, cancellationToken);
+
+        if (validation.IsValid == false)
+        {
+            return validation.ToErrorList();
+        }
+
         var volunteerResult = await _volunteersRepository.GetById(command.Id, cancellationToken);
         if (volunteerResult.IsFailure)
         {
-            return volunteerResult.Error;
+            return volunteerResult.Error.ToErrorList();
         }
 
         var volunteer = volunteerResult.Value;

@@ -55,6 +55,11 @@ public record Error
 
         return new Error(parts[0], parts[1], type);
     }
+
+    public ErrorList ToErrorList()
+    {
+        return new ErrorList([this]);
+    }
 }
 
 public enum ErrorType
@@ -63,4 +68,19 @@ public enum ErrorType
     NotFound,
     Failure,
     Conflict
+}
+
+public class ErrorList
+{
+    public ErrorList(IEnumerable<Error> errors)
+    {
+        Errors = [..errors];
+    }
+
+    public List<Error> Errors { get; }
+
+    public static implicit operator ErrorList(Error error)
+    {
+        return new ErrorList([error]);
+    }
 }

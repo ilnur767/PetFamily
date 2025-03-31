@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.UpdateMainInfo;
@@ -16,7 +15,6 @@ public class VolunteersController : ControllerBase
     /// <param name="id">Идентификатор волонтера.</param>
     /// <param name="updateMainInfoHandler">Хендлер для обновления волонтера.</param>
     /// <param name="request">Тело запроса.</param>
-    /// <param name="validator">Валидатор.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns></returns>
     [HttpPut("{id:guid}/main-info")]
@@ -24,16 +22,9 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid id,
         [FromServices] UpdateMainInfoHandler updateMainInfoHandler,
         [FromBody] UpdateMainInfoRequest request,
-        [FromServices] IValidator<UpdateMainInfoCommand> validator,
         CancellationToken cancellationToken = default)
     {
         var command = request.ToCommand(id);
-
-        var validation = await validator.ValidateAsync(command, cancellationToken);
-        if (validation.IsValid == false)
-        {
-            return validation.ToResponse();
-        }
 
         var result = await updateMainInfoHandler.Handle(command, cancellationToken);
 

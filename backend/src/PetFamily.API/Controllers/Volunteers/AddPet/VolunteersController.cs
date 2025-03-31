@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.AddPet;
@@ -16,20 +15,12 @@ public class VolunteersController : ControllerBase
     [HttpPost]
     [Route("{id:guid}/pets")]
     public async Task<ActionResult<string>> AddPet(
-        [FromServices] IValidator<AddPetCommand> validator,
         [FromRoute] Guid id,
         [FromServices] AddPetCommandHandler commandHandler,
         [FromBody] AddPetRequest request,
         CancellationToken cancellationToken)
     {
         var command = request.ToCommand(id);
-
-        var validationResult = await validator.ValidateAsync(command, cancellationToken);
-
-        if (validationResult.IsValid == false)
-        {
-            return validationResult.ToResponse();
-        }
 
         var result = await commandHandler.Handle(command, cancellationToken);
 

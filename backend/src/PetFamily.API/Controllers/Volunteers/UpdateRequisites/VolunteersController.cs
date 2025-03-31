@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.UpdateRequisites;
@@ -24,16 +23,9 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid id,
         [FromServices] UpdateRequisitesHandler updateRequisitesHandler,
         [FromBody] IEnumerable<UpdateRequisiteDto> updateRequisitesDto,
-        [FromServices] IValidator<UpdateRequisitesCommand> validator,
         CancellationToken cancellationToken = default)
     {
         var command = new UpdateRequisitesCommand(id, updateRequisitesDto);
-        var validation = await validator.ValidateAsync(command, cancellationToken);
-        if (validation.IsValid == false)
-        {
-            return validation.ToResponse();
-        }
-
 
         var result = await updateRequisitesHandler.Handle(command, cancellationToken);
 

@@ -35,7 +35,7 @@ public class VolunteersController : ControllerBase
 
         if (result.IsFailure)
         {
-            return result.Error.ToResponse();
+            return result.Error.ToErrorResponse();
         }
 
         return Ok(Envelop.Ok(result.Value));

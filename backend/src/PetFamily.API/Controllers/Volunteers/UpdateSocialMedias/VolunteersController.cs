@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
 using PetFamily.Application.Volunteers.UpdateSocialMedias;
@@ -16,7 +15,6 @@ public class VolunteersController : ControllerBase
     /// <param name="id">Идентификатор волонтера.</param>
     /// <param name="updateSocialMediasHandler">Хендлер для обновления социальных сетей.</param>
     /// <param name="updateSocialMediasDto">Тело запроса.</param>
-    /// <param name="validator">Валидатор.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
     /// <returns></returns>
     [HttpPut("{id:guid}/social-medias")]
@@ -24,15 +22,9 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid id,
         [FromServices] UpdateSocialMediasHandler updateSocialMediasHandler,
         [FromBody] IEnumerable<UpdateSocialMediasDto> updateSocialMediasDto,
-        [FromServices] IValidator<UpdateSocialMediasCommand> validator,
         CancellationToken cancellationToken = default)
     {
         var command = new UpdateSocialMediasCommand(id, updateSocialMediasDto);
-        var validation = await validator.ValidateAsync(command, cancellationToken);
-        if (validation.IsValid == false)
-        {
-            return validation.ToResponse();
-        }
 
         var result = await updateSocialMediasHandler.Handle(command, cancellationToken);
 
