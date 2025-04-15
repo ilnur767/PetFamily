@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PetFamily.Application.Volunteers.DeletePetPhoto;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.DeletePetPhoto;
 using static PetFamily.API.Extensions.ResponseExtensions;
 
 namespace PetFamily.API.Controllers.Volunteers.DeletePetPhoto;
@@ -17,7 +18,7 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid id,
         [FromRoute] Guid petId,
         [FromBody] DeletePetPhotosRequest request,
-        [FromServices] DeletePetPhotoCommandHandler addPetPhotoCommandHandler,
+        [FromServices] ICommandHandler<DeletePetPhotoCommand> addPetPhotoCommandHandler,
         CancellationToken cancellationToken)
     {
         var command = new DeletePetPhotoCommand(id, petId, request.FilesPath);

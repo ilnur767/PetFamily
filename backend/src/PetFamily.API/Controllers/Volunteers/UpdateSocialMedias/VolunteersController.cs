@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.UpdateSocialMedias;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.UpdateSocialMedias;
 
 namespace PetFamily.API.Controllers.Volunteers.UpdateSocialMedias;
 
@@ -20,7 +21,7 @@ public class VolunteersController : ControllerBase
     [HttpPut("{id:guid}/social-medias")]
     public async Task<ActionResult<Guid>> UpdateSocialMedias(
         [FromRoute] Guid id,
-        [FromServices] UpdateSocialMediasHandler updateSocialMediasHandler,
+        [FromServices] ICommandHandler<Guid, UpdateSocialMediasCommand> updateSocialMediasHandler,
         [FromBody] IEnumerable<UpdateSocialMediasDto> updateSocialMediasDto,
         CancellationToken cancellationToken = default)
     {

@@ -3,17 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PetFamily.Application.Common;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Services;
 
 public sealed class DeleteExpiredVolunteersService
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly WriteDbContext _dbContext;
     private readonly int _expirationDays;
     private readonly ILogger<DeleteExpiredVolunteersService> _logger;
     private readonly TimeProvider _timeProvider;
 
-    public DeleteExpiredVolunteersService(ApplicationDbContext dbContext, TimeProvider timeProvider,
+    public DeleteExpiredVolunteersService(WriteDbContext dbContext, TimeProvider timeProvider,
         IOptionsMonitor<SchedulingOptions> options, ILogger<DeleteExpiredVolunteersService> logger)
     {
         _dbContext = dbContext;

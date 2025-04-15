@@ -1,18 +1,19 @@
 ﻿using CSharpFunctionalExtensions;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Volunteers;
+using PetFamily.Application.Volunteers.Commands;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Volunteers;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories;
 
 [UsedImplicitly]
 public class VolunteersRepository : IVolunteersRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly WriteDbContext _context;
 
-    public VolunteersRepository(ApplicationDbContext context)
+    public VolunteersRepository(WriteDbContext context)
     {
         _context = context;
     }

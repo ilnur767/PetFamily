@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.AddPet;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.AddPet;
 
 namespace PetFamily.API.Controllers.Volunteers.AddPet;
 
@@ -16,7 +17,7 @@ public class VolunteersController : ControllerBase
     [Route("{id:guid}/pets")]
     public async Task<ActionResult<string>> AddPet(
         [FromRoute] Guid id,
-        [FromServices] AddPetCommandHandler commandHandler,
+        [FromServices] ICommandHandler<Guid, AddPetCommand> commandHandler,
         [FromBody] AddPetRequest request,
         CancellationToken cancellationToken)
     {

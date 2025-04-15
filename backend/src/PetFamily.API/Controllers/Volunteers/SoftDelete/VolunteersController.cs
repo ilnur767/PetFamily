@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.SoftDelete;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.SoftDelete;
 using static PetFamily.API.Extensions.ResponseExtensions;
 
 namespace PetFamily.API.Controllers.Volunteers.SoftDelete;
@@ -17,7 +18,7 @@ public class VolunteersController : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     [HttpDelete("{id:guid}/soft")]
     public async Task<ActionResult<Guid>> Delete(
-        [FromServices] SoftDeleteVolunteerHandler softDeleteVolunteerHandler,
+        [FromServices] ICommandHandler<Guid, SoftDeleteVolunteerCommand> softDeleteVolunteerHandler,
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {

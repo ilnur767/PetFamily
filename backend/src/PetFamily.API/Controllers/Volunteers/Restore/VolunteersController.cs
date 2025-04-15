@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.Restore;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.Restore;
 using static PetFamily.API.Extensions.ResponseExtensions;
 
 namespace PetFamily.API.Controllers.Volunteers.Restore;
@@ -17,7 +18,7 @@ public class VolunteersController : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     [HttpPut("{id:guid}/restore")]
     public async Task<ActionResult<Guid>> Restore(
-        [FromServices] RestoreVolunteerHandler restoreVolunteerHandler,
+        [FromServices] ICommandHandler<Guid, RestoreVolunteerCommand> restoreVolunteerHandler,
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {

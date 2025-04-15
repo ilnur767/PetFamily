@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.HardDelete;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.HardDelete;
 using static PetFamily.API.Extensions.ResponseExtensions;
 
 namespace PetFamily.API.Controllers.Volunteers.HardDelete;
@@ -17,7 +18,7 @@ public class VolunteersController : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     [HttpDelete("{id:guid}/hard")]
     public async Task<ActionResult<Guid>> Delete(
-        [FromServices] HardDeleteVolunteerHandler hardDeleteVolunteerHandler,
+        [FromServices] ICommandHandler<Guid, HardDeleteVolunteerCommand> hardDeleteVolunteerHandler,
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {

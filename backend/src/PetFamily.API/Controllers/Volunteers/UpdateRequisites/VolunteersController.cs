@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.UpdateRequisites;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.UpdateRequisites;
 
 namespace PetFamily.API.Controllers.Volunteers.UpdateRequisites;
 
@@ -21,7 +22,7 @@ public class VolunteersController : ControllerBase
     [HttpPut("{id:guid}/requisites")]
     public async Task<ActionResult<Guid>> UpdateRequisites(
         [FromRoute] Guid id,
-        [FromServices] UpdateRequisitesHandler updateRequisitesHandler,
+        [FromServices] ICommandHandler<Guid, UpdateRequisitesCommand> updateRequisitesHandler,
         [FromBody] IEnumerable<UpdateRequisiteDto> updateRequisitesDto,
         CancellationToken cancellationToken = default)
     {

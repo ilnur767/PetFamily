@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
-using PetFamily.Application.Volunteers.ChangePetPosition;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.ChangePetPosition;
 
 namespace PetFamily.API.Controllers.Volunteers.ChangePetPosition;
 
@@ -16,7 +17,7 @@ public class VolunteersController : ControllerBase
     public async Task<ActionResult<string>> ChangePetPosition(
         [FromRoute] Guid id,
         [FromRoute] Guid petId,
-        [FromServices] ChangePetPositionHandler commandHandler,
+        [FromServices] ICommandHandler<ChangePetPositionCommand> commandHandler,
         [FromBody] ChangePetPositionRequest request,
         CancellationToken cancellationToken)
     {

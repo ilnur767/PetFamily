@@ -3,14 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Species;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Specieses;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.Infrastructure.Repositories;
 
 public class SpeciesRepository : ISpeciesRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly WriteDbContext _context;
 
-    public SpeciesRepository(ApplicationDbContext context)
+    public SpeciesRepository(WriteDbContext context)
     {
         _context = context;
     }

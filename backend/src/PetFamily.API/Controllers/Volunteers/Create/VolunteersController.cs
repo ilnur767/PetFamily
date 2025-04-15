@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.Create;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.Create;
 
 namespace PetFamily.API.Controllers.Volunteers.Create;
 
@@ -17,7 +18,7 @@ public class VolunteersController : ControllerBase
     /// <param name="cancellationToken">Токен отмены.</param>
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
-        [FromServices] CreateVolunteerHandler createVolunteerHandler,
+        [FromServices] ICommandHandler<Guid, CreateVolunteerCommand> createVolunteerHandler,
         [FromBody] CreateVolunteerRequest createVolunteerRequest,
         CancellationToken cancellationToken = default)
     {

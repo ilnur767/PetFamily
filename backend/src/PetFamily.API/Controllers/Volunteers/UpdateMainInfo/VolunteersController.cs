@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Extensions;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.UpdateMainInfo;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.UpdateMainInfo;
 
 namespace PetFamily.API.Controllers.Volunteers.UpdateMainInfo;
 
@@ -20,7 +21,7 @@ public class VolunteersController : ControllerBase
     [HttpPut("{id:guid}/main-info")]
     public async Task<ActionResult<Guid>> UpdateMainInfo(
         [FromRoute] Guid id,
-        [FromServices] UpdateMainInfoHandler updateMainInfoHandler,
+        [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> updateMainInfoHandler,
         [FromBody] UpdateMainInfoRequest request,
         CancellationToken cancellationToken = default)
     {

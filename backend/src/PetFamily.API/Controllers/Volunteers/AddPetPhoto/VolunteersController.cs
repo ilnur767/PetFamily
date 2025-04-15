@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Response;
-using PetFamily.Application.Volunteers.AddPetPhoto;
+using PetFamily.Application.Abstractions;
+using PetFamily.Application.Volunteers.Commands.AddPetPhoto;
 using static PetFamily.API.Extensions.ResponseExtensions;
 
 namespace PetFamily.API.Controllers.Volunteers.AddPetPhoto;
@@ -18,7 +19,7 @@ public class VolunteersController : ControllerBase
         [FromRoute] Guid id,
         [FromRoute] Guid petId,
         [FromForm] IFormFileCollection files,
-        [FromServices] AddPetPhotoCommandHandler addPetPhotoCommandHandler,
+        [FromServices] ICommandHandler<IReadOnlyCollection<string>, AddPetPhotoCommand> addPetPhotoCommandHandler,
         CancellationToken cancellationToken)
     {
         List<UploadPhotoDto> filesDto = [];
