@@ -1,9 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
-using PetFamily.Application.Species;
+using PetFamily.Application.Specieses;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Specieses;
 using PetFamily.Domain.Volunteers;
@@ -13,15 +15,16 @@ namespace PetFamily.Application.Volunteers.Commands.AddPet;
 [UsedImplicitly]
 public sealed class AddPetCommandHandler : ICommandHandler<Guid, AddPetCommand>
 {
-    private readonly ISpeciesRepository _speciesRepository;
+    private readonly IReadDbContext _readDbContext;
     private readonly IVolunteersRepository _volunteersRepository;
     private readonly IValidator<AddPetCommand> validator;
 
-    public AddPetCommandHandler(IVolunteersRepository volunteersRepository, ISpeciesRepository speciesRepository, IValidator<AddPetCommand> validator)
+    public AddPetCommandHandler(IVolunteersRepository volunteersRepository, ISpeciesRepository speciesRepository, IValidator<AddPetCommand> validator,
+        IReadDbContext readDbContext)
     {
         _volunteersRepository = volunteersRepository;
-        _speciesRepository = speciesRepository;
         this.validator = validator;
+        _readDbContext = readDbContext;
     }
 
     public async Task<Result<Guid, ErrorList>> Handle(AddPetCommand command, CancellationToken cancellationToken)
@@ -40,21 +43,13 @@ public sealed class AddPetCommandHandler : ICommandHandler<Guid, AddPetCommand>
             return volunteer.Error.ToErrorList();
         }
 
-        var speices = await _speciesRepository.GetById(command.SpeciesId, cancellationToken);
-
-        if (speices.IsFailure)
+        var existsResult = await CheckBreedToSpeciesExists(command, cancellationToken);
+        if (existsResult.IsFailure)
         {
-            return speices.Error.ToErrorList();
+            return existsResult.Error.ToErrorList();
         }
 
-        var breed = speices.Value.GetBreedById(command.BreedId);
-
-        if (breed.IsFailure)
-        {
-            return breed.Error.ToErrorList();
-        }
-
-        var petSpecies = new PetSpecies(SpeciesId.Create(speices.Value.Id), BreedId.Create(command.BreedId));
+        var petSpecies = new PetSpecies(SpeciesId.Create(command.SpeciesId), BreedId.Create(command.BreedId));
 
         var petStatus = PetStatus.Create(command.PetStatus).Value;
 
@@ -73,6 +68,26 @@ public sealed class AddPetCommandHandler : ICommandHandler<Guid, AddPetCommand>
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);
 
         return petId.Value;
+    }
+
+    private async Task<UnitResult<Error>> CheckBreedToSpeciesExists(AddPetCommand command, CancellationToken cancellationToken)
+    {
+        var speices = await _readDbContext.Specieses.AnyAsync(s => s.Id == command.SpeciesId, cancellationToken);
+
+        if (speices == false)
+        {
+            return Errors.General.NotFound(command.SpeciesId);
+        }
+
+        var breed = await _readDbContext.Breeds
+            .AnyAsync(b => b.Id == command.BreedId && b.SpeciesId == command.SpeciesId, cancellationToken);
+
+        if (breed == false)
+        {
+            return Errors.General.NotFound(command.BreedId);
+        }
+
+        return new UnitResult<Error>();
     }
 }
 

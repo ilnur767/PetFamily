@@ -68,6 +68,8 @@ public class AddPetPhotoCommandHandler : ICommandHandler<IReadOnlyCollection<str
         if (savePhotoResult.IsFailure)
         {
             await _messageQueue.WriteAsync(filesData.Select(f => f.Info), cancellationToken);
+
+            return savePhotoResult.Error.ToErrorList();
         }
 
         return result.Value.ToList();
@@ -88,9 +90,7 @@ public class AddPetPhotoCommandHandler : ICommandHandler<IReadOnlyCollection<str
             return pet.Error;
         }
 
-        var photosList = PetPhotosList.Create(photos);
-
-        pet.Value.AddPhotos(photosList.Value);
+        pet.Value.UpdatePhotos(photos);
 
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);
 

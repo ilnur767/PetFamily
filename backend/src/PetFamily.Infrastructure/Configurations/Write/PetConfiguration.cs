@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetFamily.Application.Dtos;
 using PetFamily.Domain.Specieses;
 using PetFamily.Domain.Volunteers;
+using PetFamily.Infrastructure.Extensions;
 using static PetFamily.Domain.Common.DataLimitsConstants;
 
 namespace PetFamily.Infrastructure.Configurations.Write;
@@ -53,28 +55,17 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             .HasConversion(p => p.Status.ToString(), p => PetStatus.Create(Enum.Parse<PetStatusValue>(p)))
             .HasColumnName("status").HasMaxLength(MaxLowTextLength);
 
-        builder.OwnsOne(v => v.RequisiteList, rl =>
-        {
-            rl.ToJson();
+        builder.Property(p => p.Requisites)
+            .ValueObjectsCollectionJsonConversion(
+                requisite => new RequisiteDto(requisite.Name, requisite.Description),
+                dto => Requisite.Create(dto.Name, dto.Description).Value)
+            .HasColumnName("requisites");
 
-            rl.OwnsMany(s => s.Requisites, r =>
-            {
-                r.Property(s => s.Name).IsRequired().HasMaxLength(MaxLowTextLength);
-                r.Property(s => s.Description).IsRequired().HasMaxLength(MaxLowTextLength);
-            });
-        });
-
-        builder.OwnsOne(v => v.PhotosList, rl =>
-        {
-            rl.ToJson();
-
-            rl.OwnsMany(s => s.Photos, r =>
-            {
-                r.Property(s => s.FileName).IsRequired().HasMaxLength(MaxLowTextLength);
-                r.Property(s => s.FilePath).IsRequired().HasMaxLength(MaxLowTextLength);
-            });
-        });
-
+        builder.Property(p => p.Photos)
+            .ValueObjectsCollectionJsonConversion(
+                photo => new PhotoDto(photo.FileName, photo.FilePath),
+                dto => Photo.Create(dto.FileName, dto.FilePath).Value)
+            .HasColumnName("photos");
 
         builder.OwnsOne(p => p.Position, sr =>
         {

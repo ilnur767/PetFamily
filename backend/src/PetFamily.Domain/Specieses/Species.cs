@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.Domain.Common;
-using static PetFamily.Domain.Common.ValidationMessageConstants;
 using static PetFamily.Domain.Common.Errors;
+using static PetFamily.Domain.Common.DataLimitsConstants;
 
 namespace PetFamily.Domain.Specieses;
 
-public class Species : Entity<SpeciesId>
+public class Species : SoftDeletableEntity<SpeciesId>
 {
     private readonly List<Breed> _breeds = new();
 
@@ -18,14 +18,14 @@ public class Species : Entity<SpeciesId>
 
     public IReadOnlyList<Breed> Breeds => _breeds;
 
-    public static Result<Species> Create(SpeciesId id, string name)
+    public static Result<Species, Error> Create(SpeciesId id, string speicesName)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(speicesName) || speicesName.Length > MaxLowTextLength)
         {
-            return Result.Failure<Species>(string.Format(EmptyPropertyTemplate, "Species name"));
+            return General.ValueIsInvalid(nameof(speicesName));
         }
 
-        return Result.Success(new Species(id, name));
+        return new Species(id, speicesName);
     }
 
     public Result<Breed, Error> GetBreedById(Guid id)
@@ -37,5 +37,23 @@ public class Species : Entity<SpeciesId>
         }
 
         return breed;
+    }
+
+    public UnitResult<Error> AddBreed(Breed breed)
+    {
+        _breeds.Add(breed);
+
+        return new UnitResult<Error>();
+    }
+
+    public override void SoftDelete(DateTime deletedAt)
+    {
+        DeletedAt = deletedAt;
+        IsDeleted = true;
+
+        foreach (var breed in _breeds)
+        {
+            breed.SoftDelete(deletedAt);
+        }
     }
 }

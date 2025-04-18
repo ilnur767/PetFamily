@@ -49,13 +49,13 @@ public sealed class DeletePetPhotoCommandHandler : ICommandHandler<DeletePetPhot
             return pet.Error.ToErrorList();
         }
 
-        if (pet.Value.PhotosList != null)
+        if (pet.Value.Photos != null)
         {
-            var photosList = pet.Value.PhotosList.Photos.Select(p => Photo.Create(p.FileName, p.FilePath).Value);
+            var photosList = pet.Value.Photos.Select(p => Photo.Create(p.FileName, p.FilePath).Value);
 
             var newPhotos = photosList.Where(p => !command.FilesPath.Contains(p.FilePath));
 
-            pet.Value.AddPhotos(PetPhotosList.Create(newPhotos).Value);
+            pet.Value.UpdatePhotos(newPhotos);
 
             await _volunteersRepository.Save(volunteer.Value, cancellationToken);
 
