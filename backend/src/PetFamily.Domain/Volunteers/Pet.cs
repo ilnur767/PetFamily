@@ -5,8 +5,12 @@ using static PetFamily.Domain.Common.ValidationMessageConstants;
 
 namespace PetFamily.Domain.Volunteers;
 
-public class Pet : Entity<PetId>
+public class Pet : SoftDeletableEntity<PetId>
 {
+    private List<Photo> _photo = [];
+
+    private List<Requisite> _requisite = [];
+
     // ef
     private Pet()
     {
@@ -52,23 +56,30 @@ public class Pet : Entity<PetId>
 
     public PetStatus Status { get; private set; } = default!;
 
-    public RequisiteList? RequisiteList { get; set; }
+    public IReadOnlyList<Requisite> Requisites
+    {
+        get => _requisite;
+        private set => _requisite = value.ToList();
+    }
 
-    public PetPhotosList? PhotosList { get; set; }
+    public IReadOnlyList<Photo> Photos
+    {
+        get => _photo;
+        private set => _photo = value.ToList();
+    }
 
     public DateTime CreatedAt { get; private set; }
 
-
     public Position Position { get; private set; } = default!;
 
-    public void AddPhotos(PetPhotosList petPhotosList)
+    public void UpdatePhotos(IEnumerable<Photo> photos)
     {
-        PhotosList = petPhotosList;
+        _photo = photos.ToList();
     }
 
-    public void DeletePhotos(PetPhotosList petPhotosList)
+    public void UpdateRequisites(IEnumerable<Requisite> requisites)
     {
-        PhotosList = petPhotosList;
+        _requisite = requisites.ToList();
     }
 
     public void SetPosition(Position position)

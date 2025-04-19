@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PetFamily.Infrastructure;
+using PetFamily.Infrastructure.DbContexts;
 
 namespace PetFamily.API;
 
@@ -9,7 +9,7 @@ public static class AppExtensions
     {
         await using var scope = app.ApplicationServices.CreateAsyncScope();
 
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
 
         await dbContext.Database.MigrateAsync();
     }
