@@ -38,21 +38,21 @@ public class Pet : SoftDeletableEntity<PetId>
 
     public string? Color { get; }
 
-    public string? HealthInformation { get; private set; } = default!;
+    public string? HealthInformation { get; private set; }
 
-    public string? Address { get; private set; } = default!;
+    public string? Address { get; private set; }
 
-    public double? Weight { get; }
+    public double? Weight { get; private set; }
 
-    public double? Height { get; }
+    public double? Height { get; private set; }
 
-    public PhoneNumber? PhoneNumber { get; }
+    public PhoneNumber? PhoneNumber { get; private set; }
 
-    public bool? IsCastrated { get; }
+    public bool? IsCastrated { get; private set; }
 
-    public DateTime? DateOfBirth { get; }
+    public DateTime? DateOfBirth { get; private set; }
 
-    public bool? IsVaccinated { get; }
+    public bool? IsVaccinated { get; private set; }
 
     public PetStatus Status { get; private set; } = default!;
 
@@ -141,5 +141,31 @@ public class Pet : SoftDeletableEntity<PetId>
     public void Move(Position newPosition)
     {
         Position = newPosition;
+    }
+
+    public void UpdateInfo(
+        PetSpecies petSpecies,
+        string nickName,
+        string description,
+        PhoneNumber phoneNumber,
+        double height,
+        double weight,
+        bool isCastrated,
+        bool isVaccinated,
+        DateTime dateOfBirth,
+        string healthInformation,
+        string address)
+    {
+        PetSpecies = petSpecies;
+        NickName = nickName;
+        Description = description;
+        PhoneNumber = phoneNumber;
+        Weight = weight;
+        Height = height;
+        IsCastrated = isCastrated;
+        IsVaccinated = isVaccinated;
+        DateOfBirth = dateOfBirth;
+        HealthInformation = healthInformation;
+        Address = address;
     }
 }

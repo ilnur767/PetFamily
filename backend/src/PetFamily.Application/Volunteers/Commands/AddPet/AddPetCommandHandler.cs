@@ -6,6 +6,7 @@ using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Specieses;
+using PetFamily.Application.Specieses.Commands.CheckBreedToSpeciesExists;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Specieses;
 using PetFamily.Domain.Volunteers;
@@ -15,21 +16,27 @@ namespace PetFamily.Application.Volunteers.Commands.AddPet;
 [UsedImplicitly]
 public sealed class AddPetCommandHandler : ICommandHandler<Guid, AddPetCommand>
 {
+    private readonly ICommandHandler<CheckBreedToSpeciesExistsCommand> _checkBreedToSpeciesExistsHandler;
     private readonly IReadDbContext _readDbContext;
+    private readonly IValidator<AddPetCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
-    private readonly IValidator<AddPetCommand> validator;
 
-    public AddPetCommandHandler(IVolunteersRepository volunteersRepository, ISpeciesRepository speciesRepository, IValidator<AddPetCommand> validator,
-        IReadDbContext readDbContext)
+    public AddPetCommandHandler(
+        IVolunteersRepository volunteersRepository,
+        ISpeciesRepository speciesRepository,
+        IValidator<AddPetCommand> validator,
+        IReadDbContext readDbContext,
+        ICommandHandler<CheckBreedToSpeciesExistsCommand> checkBreedToSpeciesExistsHandler)
     {
         _volunteersRepository = volunteersRepository;
-        this.validator = validator;
+        _validator = validator;
         _readDbContext = readDbContext;
+        _checkBreedToSpeciesExistsHandler = checkBreedToSpeciesExistsHandler;
     }
 
     public async Task<Result<Guid, ErrorList>> Handle(AddPetCommand command, CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
         if (validationResult.IsValid == false)
         {
@@ -43,10 +50,11 @@ public sealed class AddPetCommandHandler : ICommandHandler<Guid, AddPetCommand>
             return volunteer.Error.ToErrorList();
         }
 
-        var existsResult = await CheckBreedToSpeciesExists(command, cancellationToken);
+        var existsResult =
+            await _checkBreedToSpeciesExistsHandler.Handle(new CheckBreedToSpeciesExistsCommand(command.SpeciesId, command.BreedId), cancellationToken);
         if (existsResult.IsFailure)
         {
-            return existsResult.Error.ToErrorList();
+            return existsResult.Error;
         }
 
         var petSpecies = new PetSpecies(SpeciesId.Create(command.SpeciesId), BreedId.Create(command.BreedId));
