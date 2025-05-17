@@ -101,6 +101,21 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
         return new UnitResult<Error>();
     }
 
+    public UnitResult<Error> UpdatePetStatus(Guid petId,
+        PetStatus status)
+    {
+        var existPet = Pets.FirstOrDefault(p => p.Id.Value == petId);
+
+        if (existPet == null)
+        {
+            return Errors.General.NotFound(petId);
+        }
+
+        existPet.UpdateStatus(status);
+
+        return new UnitResult<Error>();
+    }
+
     public Result<Pet, Error> GetPetById(Guid id)
     {
         var pet = _pets.FirstOrDefault(p => p.Id.Value == id);

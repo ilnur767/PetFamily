@@ -168,4 +168,9 @@ public class Pet : SoftDeletableEntity<PetId>
         HealthInformation = healthInformation;
         Address = address;
     }
+
+    public void UpdateStatus(PetStatus status)
+    {
+        Status = status;
+    }
 }
