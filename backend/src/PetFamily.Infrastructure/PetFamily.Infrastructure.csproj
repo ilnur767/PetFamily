@@ -18,8 +18,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\20250325062607_AddSerialNumber.Designer.cs"/>
-  </ItemGroup>
-
 </Project>

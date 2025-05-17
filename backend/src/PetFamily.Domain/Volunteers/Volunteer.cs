@@ -116,6 +116,35 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
         return new UnitResult<Error>();
     }
 
+    public UnitResult<Error> PetSoftDelete(Guid petId,
+        DateTime dateTime)
+    {
+        var result = GetPetById(petId);
+
+        if (result.IsFailure)
+        {
+            return result;
+        }
+
+        result.Value.SoftDelete(dateTime);
+
+        return new UnitResult<Error>();
+    }
+
+    public UnitResult<Error> PetHardDelete(Guid petId)
+    {
+        var result = GetPetById(petId);
+
+        if (result.IsFailure)
+        {
+            return result;
+        }
+
+        _pets.Remove(result.Value);
+
+        return new UnitResult<Error>();
+    }
+
     public Result<Pet, Error> GetPetById(Guid id)
     {
         var pet = _pets.FirstOrDefault(p => p.Id.Value == id);
