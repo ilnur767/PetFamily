@@ -2,6 +2,7 @@
 using FluentValidation;
 using JetBrains.Annotations;
 using PetFamily.Application.Abstractions;
+using PetFamily.Application.Common;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.FileProvider;
 using PetFamily.Application.Messaging;
@@ -14,7 +15,6 @@ namespace PetFamily.Application.Volunteers.Commands.AddPetPhoto;
 [UsedImplicitly]
 public class AddPetPhotoCommandHandler : ICommandHandler<IReadOnlyCollection<string>, AddPetPhotoCommand>
 {
-    private const string PhotosBucketName = "photo";
     private readonly IFileProvider _fileProvider;
     private readonly IMessageQueue<IEnumerable<FileInfo>> _messageQueue;
     private readonly IValidator<AddPetPhotoCommand> _validator;
@@ -48,13 +48,13 @@ public class AddPetPhotoCommandHandler : ICommandHandler<IReadOnlyCollection<str
         foreach (var photo in command.Photos)
         {
             var filePath = $"{Guid.NewGuid()}_{photo.FileName}";
-            var fileData = new FileData(photo.Content, new FileInfo(filePath, PhotosBucketName));
+            var fileData = new FileData(photo.Content, new FileInfo(filePath, FileProviderConstants.PhotosBucketName));
             filesData.Add(fileData);
 
             photos.Add(Photo.Create(photo.FileName, filePath).Value);
         }
 
-        var result = await _fileProvider.UploadFiles(filesData, PhotosBucketName, cancellationToken);
+        var result = await _fileProvider.UploadFiles(filesData, FileProviderConstants.PhotosBucketName, cancellationToken);
 
         if (result.IsFailure)
         {
