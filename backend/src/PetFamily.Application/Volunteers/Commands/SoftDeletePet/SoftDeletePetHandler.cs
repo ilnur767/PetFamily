@@ -1,18 +1,23 @@
 ﻿using CSharpFunctionalExtensions;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Domain.Common;
 
 namespace PetFamily.Application.Volunteers.Commands.SoftDeletePet;
 
+[UsedImplicitly]
 public sealed class SoftDeletePetHandler : ICommandHandler<SoftDeletePetCommand>
 {
+    private readonly ILogger<SoftDeletePetHandler> _logger;
     private readonly TimeProvider _timeProvider;
     private readonly IVolunteersRepository _volunteersRepository;
 
-    public SoftDeletePetHandler(IVolunteersRepository volunteersRepository, TimeProvider timeProvider)
+    public SoftDeletePetHandler(IVolunteersRepository volunteersRepository, TimeProvider timeProvider, ILogger<SoftDeletePetHandler> logger)
     {
         _volunteersRepository = volunteersRepository;
         _timeProvider = timeProvider;
+        _logger = logger;
     }
 
     public async Task<UnitResult<ErrorList>> Handle(SoftDeletePetCommand command, CancellationToken cancellationToken)
@@ -33,7 +38,9 @@ public sealed class SoftDeletePetHandler : ICommandHandler<SoftDeletePetCommand>
 
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);
 
-        return new UnitResult<ErrorList>();
+        _logger.LogInformation("Pet with id '{id}' was deleted", command.PetId);
+
+        return Result.Success<ErrorList>();
     }
 }
 

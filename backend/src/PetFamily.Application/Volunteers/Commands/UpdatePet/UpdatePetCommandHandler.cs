@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Application.Specieses.Commands.CheckBreedToSpeciesExists;
@@ -9,20 +11,23 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdatePet;
 
+[UsedImplicitly]
 public sealed class UpdatePetCommandHandler : ICommandHandler<Guid, UpdatePetCommand>
 {
     private readonly ICommandHandler<CheckBreedToSpeciesExistsCommand> _checkBreedToSpeciesExistsCommandHandler;
+    private readonly ILogger<UpdatePetCommandHandler> _logger;
     private readonly IValidator<UpdatePetCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
     public UpdatePetCommandHandler(
         IValidator<UpdatePetCommand> validator,
         ICommandHandler<CheckBreedToSpeciesExistsCommand> checkBreedToSpeciesExistsCommandHandler,
-        IVolunteersRepository volunteersRepository)
+        IVolunteersRepository volunteersRepository, ILogger<UpdatePetCommandHandler> logger)
     {
         _validator = validator;
         _checkBreedToSpeciesExistsCommandHandler = checkBreedToSpeciesExistsCommandHandler;
         _volunteersRepository = volunteersRepository;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, ErrorList>> Handle(UpdatePetCommand command, CancellationToken cancellationToken)
@@ -70,6 +75,8 @@ public sealed class UpdatePetCommandHandler : ICommandHandler<Guid, UpdatePetCom
         }
 
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);
+
+        _logger.LogInformation("Updated main info for pet with id: {id}", command.PetId);
 
         return command.PetId;
     }

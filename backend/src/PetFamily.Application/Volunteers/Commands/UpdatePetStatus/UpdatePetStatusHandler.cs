@@ -1,8 +1,7 @@
-﻿// Licensed to the.NET Foundation under one or more agreements.
-// The.NET Foundation licenses this file to you under the MIT license.
-
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Extensions;
 using PetFamily.Domain.Common;
@@ -10,16 +9,19 @@ using PetFamily.Domain.Volunteers;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdatePetStatus;
 
+[UsedImplicitly]
 public sealed class UpdatePetStatusHandler : ICommandHandler<UpdatePetStatusCommand>
 {
+    private readonly ILogger<UpdatePetStatusHandler> _logger;
     private readonly IValidator<UpdatePetStatusCommand> _validator;
     private readonly IVolunteersRepository _volunteersRepository;
 
-
-    public UpdatePetStatusHandler(IVolunteersRepository volunteersRepository, IValidator<UpdatePetStatusCommand> validator)
+    public UpdatePetStatusHandler(IVolunteersRepository volunteersRepository, IValidator<UpdatePetStatusCommand> validator,
+        ILogger<UpdatePetStatusHandler> logger)
     {
         _volunteersRepository = volunteersRepository;
         _validator = validator;
+        _logger = logger;
     }
 
     public async Task<UnitResult<ErrorList>> Handle(UpdatePetStatusCommand command, CancellationToken cancellationToken)
@@ -44,7 +46,9 @@ public sealed class UpdatePetStatusHandler : ICommandHandler<UpdatePetStatusComm
 
         await _volunteersRepository.Save(volunteer.Value, cancellationToken);
 
-        return new UnitResult<ErrorList>();
+        _logger.LogInformation("Updated status for pet with id: {id}", command.PetId);
+
+        return Result.Success<ErrorList>();
     }
 }
 

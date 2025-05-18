@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using JetBrains.Annotations;
 using PetFamily.Application.Validation;
 using PetFamily.Domain.Common;
 using PetFamily.Domain.Volunteers;
@@ -6,9 +7,10 @@ using static PetFamily.Domain.Common.DataLimitsConstants;
 
 namespace PetFamily.Application.Volunteers.Commands.UpdatePet;
 
-public sealed class UpdateCommandValidator : AbstractValidator<UpdatePetCommand>
+[UsedImplicitly]
+public sealed class UpdatePetCommandValidator : AbstractValidator<UpdatePetCommand>
 {
-    public UpdateCommandValidator(TimeProvider timeProvider)
+    public UpdatePetCommandValidator(TimeProvider timeProvider)
     {
         RuleFor(u => u.PetId)
             .NotEmpty()
