@@ -63,8 +63,8 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         builder.Property(p => p.Photos)
             .ValueObjectsCollectionJsonConversion(
-                photo => new PhotoDto(photo.FileName, photo.FilePath),
-                dto => Photo.Create(dto.FileName, dto.FilePath).Value)
+                photo => new PhotoDto(photo.FileName, photo.FilePath, photo.IsMain),
+                dto => Photo.Create(dto.FileName, dto.FilePath, dto.IsMain).Value)
             .HasColumnName("photos");
 
         builder.OwnsOne(p => p.Position, sr =>

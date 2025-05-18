@@ -39,17 +39,19 @@ public class Photo : ComparableValueObject
     {
     }
 
-    private Photo(string fileName, string filepath)
+    private Photo(string fileName, string filepath, bool isMain)
     {
         FileName = fileName;
         FilePath = filepath;
+        IsMain = isMain;
     }
 
     public string FileName { get; }
 
     public string FilePath { get; }
+    public bool IsMain { get; }
 
-    public static Result<Photo, Error> Create(string fileName, string filePath)
+    public static Result<Photo, Error> Create(string fileName, string filePath, bool isMain = false)
     {
         var errorMessage = new StringBuilder();
 
@@ -68,7 +70,7 @@ public class Photo : ComparableValueObject
             return Error.Validation(InvalidValueCode, errorMessage.ToString());
         }
 
-        return new Photo(fileName, filePath);
+        return new Photo(fileName, filePath, isMain);
     }
 
 
@@ -76,5 +78,6 @@ public class Photo : ComparableValueObject
     {
         yield return FileName;
         yield return FilePath;
+        yield return IsMain;
     }
 }

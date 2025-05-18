@@ -173,4 +173,22 @@ public class Pet : SoftDeletableEntity<PetId>
     {
         Status = status;
     }
+
+    public UnitResult<Error> UpdateMainPhoto(Photo photo)
+    {
+        var photoExists = _photo.FirstOrDefault(p => p.FilePath == photo.FilePath);
+        if (photoExists is null)
+        {
+            return Errors.General.NotFound();
+        }
+
+        var updatedPhotos = _photo
+            .Select(p => Photo.Create(p.FileName, p.FilePath, photo.FilePath == p.FilePath).Value)
+            .OrderByDescending(p => p.IsMain)
+            .ToList();
+
+        _photo = updatedPhotos;
+
+        return Result.Success<Error>();
+    }
 }
