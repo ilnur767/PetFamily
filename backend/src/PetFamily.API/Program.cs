@@ -1,4 +1,3 @@
-using System.Reflection;
 using PetFamily.API;
 using PetFamily.API.Common;
 using PetFamily.API.Middlewares;
@@ -24,3 +23,5 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
+
+public partial class Program;
