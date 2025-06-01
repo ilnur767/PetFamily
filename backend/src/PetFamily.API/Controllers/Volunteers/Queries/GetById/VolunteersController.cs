@@ -2,7 +2,7 @@
 using PetFamily.API.Response;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Dtos;
-using PetFamily.Application.Volunteers.Queries;
+using PetFamily.Application.Volunteers.Queries.GetById;
 
 namespace PetFamily.API.Controllers.Volunteers.Queries.GetById;
 

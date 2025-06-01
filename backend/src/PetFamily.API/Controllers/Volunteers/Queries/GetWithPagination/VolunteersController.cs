@@ -3,7 +3,7 @@ using PetFamily.API.Response;
 using PetFamily.Application.Abstractions;
 using PetFamily.Application.Dtos;
 using PetFamily.Application.Models;
-using PetFamily.Application.Volunteers.Queries;
+using PetFamily.Application.Volunteers.Queries.GetWithPagination;
 
 namespace PetFamily.API.Controllers.Volunteers.Queries.GetWithPagination;
 
@@ -20,9 +20,9 @@ public class VolunteersController : ControllerBase
         [FromServices] IQueryHandler<PagedList<VolunteerDto>, GetVolunteersWithPaginationQuery> volunteersWithPaginationHandler,
         CancellationToken cancellationToken)
     {
-        var command = new GetVolunteersWithPaginationQuery(request.Page, request.PageSize);
+        var query = new GetVolunteersWithPaginationQuery(request.Page, request.PageSize);
 
-        var result = await volunteersWithPaginationHandler.Handle(command, cancellationToken);
+        var result = await volunteersWithPaginationHandler.Handle(query, cancellationToken);
 
         return Ok(Envelop.Ok(result));
     }

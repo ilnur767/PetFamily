@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using NSubstitute;
+using PetFamily.API;
 using PetFamily.Application.FileProvider;
 using PetFamily.Domain.Common;
 using PetFamily.Infrastructure.DbContexts;

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using PetFamily.Application.Dtos;
 using PetFamily.Application.Models;
-using PetFamily.Application.Volunteers.Queries;
+using PetFamily.Application.Volunteers.Queries.GetWithPagination;
 using PetFamily.IntegrationTests.Common;
 using Xunit;
 

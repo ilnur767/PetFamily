@@ -58,14 +58,14 @@ public static class FixtureExtensions
         return breed;
     }
 
-    public static Pet CreatePet(this Fixture fixture, Guid? volunteerId, Guid speciesId, Guid breedId)
+    public static Pet CreatePet(this Fixture fixture, Guid? speciesId = null, Guid? breedId = null)
     {
         var petId = PetId.NewPetId();
         var petStatus = PetStatus.Create(fixture.Create<PetStatusValue>());
 
         var phoneNumber = PhoneNumber.Create("89992343432").Value;
 
-        var petSpesies = PetSpecies.Create(SpeciesId.Create(speciesId), BreedId.Create(breedId)).Value;
+        var petSpesies = PetSpecies.Create(SpeciesId.Create(speciesId ?? Guid.NewGuid()), BreedId.Create(breedId ?? Guid.NewGuid())).Value;
 
         var pet = Pet.Create(petId, fixture.Create<string>(), fixture.Create<string>(), phoneNumber, petSpesies, petStatus).Value;
 

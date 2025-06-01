@@ -4,7 +4,7 @@ using PetFamily.Application.Abstractions;
 using PetFamily.Application.Database;
 using PetFamily.Application.Dtos;
 
-namespace PetFamily.Application.Volunteers.Queries;
+namespace PetFamily.Application.Volunteers.Queries.GetById;
 
 [UsedImplicitly]
 public sealed class GetVolunteerByIdHandler : IQueryHandler<VolunteerDto, GetVolunteerByIdQuery>

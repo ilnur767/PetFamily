@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using Microsoft.EntityFrameworkCore;
-using NSubstitute.Exceptions;
 using PetFamily.Domain.Volunteers;
 using PetFamily.Infrastructure.DbContexts;
 using Xunit;
@@ -72,20 +71,33 @@ public abstract class TestBase : IClassFixture<IntegrationTestsWebFactory>, IAsy
         return (species.Id.Value, breed.Id.Value);
     }
 
-    protected async Task<Guid> SeedPet(Guid volunteerId, Guid speciesId, Guid breedId)
+    protected async Task<Guid> SeedPet(Guid? volunteerId = null, Guid? speciesId = null, Guid? breedId = null)
     {
-        var pet = Fixture.CreatePet(volunteerId, speciesId, breedId);
+        var pet = Fixture.CreatePet(speciesId, breedId);
 
         var volunteer = await DbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
 
         if (volunteer == null)
         {
-            throw new ArgumentNotFoundException("Volunteer not found");
+            var id = await SeedVolunteer();
+            volunteer = await DbContext.Volunteers.FirstAsync(v => v.Id == id);
         }
 
         volunteer.AddPet(pet);
         await DbContext.SaveChangesAsync();
 
         return pet.Id.Value;
+    }
+
+    protected async Task<Guid[]> SeedPets(int count)
+    {
+        var ids = new List<Guid>();
+        for (var i = 0; i < count; i++)
+        {
+            var id = await SeedPet();
+            ids.Add(id);
+        }
+
+        return ids.ToArray();
     }
 }
