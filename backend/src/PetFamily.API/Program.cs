@@ -15,7 +15,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.ApplyMigration();
+    await app.ApplyMigration();
 }
 
 app.UseSerilogRequestLogging();
