@@ -47,16 +47,27 @@ public sealed class GetPetsWithPaginationHandler : IQueryHandler<PagedList<PetDt
     private static IQueryable<PetDto> FilterPets(GetPetsWithPaginationQuery query, IQueryable<PetDto> petsQuery)
     {
         petsQuery = petsQuery.WhereIf(query.VolunteerIds?.Length > 0, p => query.VolunteerIds != null && query.VolunteerIds.Contains(p.VolunteerId));
+
         petsQuery = petsQuery.WhereIf(!string.IsNullOrEmpty(query.NickName), p => p.NickName.Contains(query.NickName!));
+
         petsQuery = petsQuery.WhereIf(!string.IsNullOrEmpty(query.Description), p => p.Description.Contains(query.Description!));
+
         petsQuery = petsQuery.WhereIf(!string.IsNullOrEmpty(query.Color), p => p.Color.Contains(query.Color!));
+
         petsQuery = petsQuery.WhereIf(!string.IsNullOrEmpty(query.HealthInformation), p => p.HealthInformation.Contains(query.HealthInformation!));
+
         petsQuery = petsQuery.WhereIf(!string.IsNullOrEmpty(query.Address), p => p.Address.Contains(query.Address!));
+
         petsQuery = petsQuery.WhereIf(query.Weight != null, p => p.Weight == query.Weight);
+
         petsQuery = petsQuery.WhereIf(query.Height != null, p => p.Height == query.Height);
+
         petsQuery = petsQuery.WhereIf(!string.IsNullOrEmpty(query.PhoneNumber), p => p.PhoneNumber.Contains(query.PhoneNumber!));
+
         petsQuery = petsQuery.WhereIf(query.IsCastrated != null, p => p.IsCastrated == query.IsCastrated);
+
         petsQuery = petsQuery.WhereIf(query.DateOfBirth != null, p => p.DateOfBirth == query.DateOfBirth);
+
         petsQuery = petsQuery.WhereIf(query.IsVaccinated != null, p => p.IsVaccinated == query.IsVaccinated);
 
         return petsQuery;

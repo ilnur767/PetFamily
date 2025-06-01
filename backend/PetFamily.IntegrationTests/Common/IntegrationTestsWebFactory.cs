@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
 using NSubstitute;
 using PetFamily.API;
@@ -73,14 +74,7 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
 
     protected virtual void ConfigureDefaultServices(IServiceCollection services)
     {
-        var fileService = services
-            .SingleOrDefault(s => s.ServiceType == typeof(IFileProvider));
-
-        if (fileService is not null)
-        {
-            services.Remove(fileService);
-        }
-
+        services.RemoveAll(typeof(IFileProvider));
         services.AddScoped<IFileProvider>(_ => _fileProviderMock);
     }
 
