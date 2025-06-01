@@ -1,4 +1,3 @@
-using System.Reflection;
 using PetFamily.API;
 using PetFamily.API.Common;
 using PetFamily.API.Middlewares;
@@ -16,7 +15,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.ApplyMigration();
+    await app.ApplyMigration();
 }
 
 app.UseSerilogRequestLogging();
@@ -24,3 +23,8 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
+
+namespace PetFamily.API
+{
+    public class Program;
+}

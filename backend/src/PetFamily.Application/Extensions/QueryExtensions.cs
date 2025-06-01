@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using PetFamily.Application.Models;
 
 namespace PetFamily.Application.Extensions;
@@ -19,5 +20,10 @@ public static class QueryExtensions
             .ToListAsync(cancellationToken);
 
         return new PagedList<T> { TotalCount = totalCount, Items = items, Page = page, PageSize = pageSize };
+    }
+
+    public static IQueryable<T> WhereIf<T>(this IQueryable<T> source, bool condition, Expression<Func<T, bool>> predicate)
+    {
+        return condition ? source.Where(predicate) : source;
     }
 }

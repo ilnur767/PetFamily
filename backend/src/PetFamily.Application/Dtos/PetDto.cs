@@ -20,6 +20,6 @@ public class PetDto
     public Guid BreedId { get; set; }
     public PhotoDto[]? Photos { get; set; }
     public RequisiteDto[]? Requisites { get; set; }
-
+    public Guid VolunteerId { get; set; }
     [JsonIgnore] public bool IsDeleted { get; set; }
 }

@@ -16,14 +16,10 @@ public sealed class AddPetPhotoCommandValidator : AbstractValidator<AddPetPhotoC
     public AddPetPhotoCommandValidator()
     {
         RuleFor(a => a.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsRequired());
-        ;
         RuleFor(a => a.PetId).NotEmpty().WithError(Errors.General.ValueIsRequired());
-        ;
         RuleFor(a => a.Photos).NotEmpty().WithError(Errors.General.ValueIsRequired());
-        ;
 
         RuleForEach(a => a.Photos)
             .Must(f => f.Content.Length <= _maxPhotoSize).WithError(Errors.General.ValueIsInvalid());
-        ;
     }
 }

@@ -5,7 +5,7 @@ namespace PetFamily.API;
 
 public static class AppExtensions
 {
-    public static async void ApplyMigration(this IApplicationBuilder app)
+    public static async Task ApplyMigration(this IApplicationBuilder app)
     {
         await using var scope = app.ApplicationServices.CreateAsyncScope();
 
