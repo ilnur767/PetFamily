@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Volunteers.Commands.AddPet;
 using PetFamily.IntegrationTests.Common;
+using PetFamily.Volunteers.Application.Commands.AddPet;
 using Xunit;
 
 namespace PetFamily.IntegrationTests.Volunteers.Commands;
@@ -28,7 +28,7 @@ public class AddPetTests : CommandTestBase<Guid, AddPetCommand>
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
 
-        var volunteer = await DbContext.Volunteers
+        var volunteer = await VolunteerWriteDbContext.Volunteers
             .Include(volunteer => volunteer.Pets)
             .FirstOrDefaultAsync();
 

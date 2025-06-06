@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <UserSecretsId>1a84d808-2131-4160-8355-cace87672171</UserSecretsId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Files\PetFamily.Files.Infrastructure\PetFamily.Files.Infrastructure.csproj"/>
+    <ProjectReference Include="..\Files\PetFamily.Files.Presentation\PetFamily.Files.Presentation.csproj"/>
+    <ProjectReference Include="..\PetFamily.Core\PetFamily.Core.csproj"/>
+    <ProjectReference Include="..\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj"/>
+    <ProjectReference Include="..\Specieses\PetFamily.Specieses.Infrastructure\PetFamily.Specieses.Infrastructure.csproj"/>
+    <ProjectReference Include="..\Specieses\PetFamily.Specieses.Presentation\PetFamily.Specieses.Presentation.csproj"/>
+    <ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Infrastructure\PetFamily.Volunteers.Infrastructure.csproj"/>
+    <ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Presentation\PetFamily.Volunteers.Presentation.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\"/>
+    <Folder Include="Response\"/>
+  </ItemGroup>
+
+</Project>

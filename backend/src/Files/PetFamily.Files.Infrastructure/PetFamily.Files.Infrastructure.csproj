@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\PetFamily.Framework\PetFamily.Framework.csproj"/>
+    <ProjectReference Include="..\PetFamily.Files.Application\PetFamily.Files.Application.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Minio" Version="6.0.1"/>
+  </ItemGroup>
+
+</Project>

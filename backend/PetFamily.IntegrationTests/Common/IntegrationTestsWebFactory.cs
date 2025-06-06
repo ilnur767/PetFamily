@@ -3,15 +3,18 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
 using NSubstitute;
-using PetFamily.API;
-using PetFamily.Application.FileProvider;
-using PetFamily.Domain.Common;
-using PetFamily.Infrastructure.DbContexts;
+using PetFamily.Core.Dtos;
+using PetFamily.Files.Application.FileProvider;
+using PetFamily.SharedKernel.Common;
+using PetFamily.Specieses.Infrastructure.DbContexts;
+using PetFamily.Volunteers.Infrastructure.DbContexts;
+using PetFamily.Web;
 using Respawn;
 using Testcontainers.PostgreSql;
 using Xunit;
@@ -39,10 +42,11 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
 
         using var scope = Services.CreateScope();
 
-        var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
+        var volunteerDbContext = scope.ServiceProvider.GetRequiredService<VolunteerWriteDbContext>();
+        await volunteerDbContext.Database.MigrateAsync();
 
-        await dbContext.Database.EnsureDeletedAsync();
-        await dbContext.Database.EnsureCreatedAsync();
+        var speciesDbContext = scope.ServiceProvider.GetRequiredService<SpeciesWriteDbContext>();
+        await speciesDbContext.Database.MigrateAsync();
 
         _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
 
@@ -58,7 +62,7 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
     public void SetupSuccessFileProviderMock()
     {
         _fileProviderMock
-            .UploadFiles(Arg.Any<IEnumerable<FileData>>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .UploadFiles(Arg.Any<IEnumerable<FileDataDto>>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Result.Success<IReadOnlyCollection<string>, Error>(["filePath"]));
     }
 

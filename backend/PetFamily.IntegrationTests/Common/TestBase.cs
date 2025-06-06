@@ -1,7 +1,8 @@
 ﻿using AutoFixture;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Domain.Volunteers;
-using PetFamily.Infrastructure.DbContexts;
+using PetFamily.Specieses.Infrastructure.DbContexts;
+using PetFamily.Volunteers.Domain.Entities;
+using PetFamily.Volunteers.Infrastructure.DbContexts;
 using Xunit;
 using IServiceScope = Microsoft.Extensions.DependencyInjection.IServiceScope;
 using ServiceProviderServiceExtensions = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions;
@@ -10,16 +11,18 @@ namespace PetFamily.IntegrationTests.Common;
 
 public abstract class TestBase : IClassFixture<IntegrationTestsWebFactory>, IAsyncLifetime
 {
-    protected readonly WriteDbContext DbContext;
     protected readonly IntegrationTestsWebFactory Factory;
     protected readonly Fixture Fixture = new();
     protected readonly IServiceScope Scope;
+    protected readonly SpeciesWriteDbContext SpeciesWriteDbContext;
+    protected readonly VolunteerWriteDbContext VolunteerWriteDbContext;
 
     protected TestBase(IntegrationTestsWebFactory factory)
     {
         Factory = factory;
         Scope = ServiceProviderServiceExtensions.CreateScope(factory.Services);
-        DbContext = ServiceProviderServiceExtensions.GetRequiredService<WriteDbContext>(Scope.ServiceProvider);
+        VolunteerWriteDbContext = ServiceProviderServiceExtensions.GetRequiredService<VolunteerWriteDbContext>(Scope.ServiceProvider);
+        SpeciesWriteDbContext = ServiceProviderServiceExtensions.GetRequiredService<SpeciesWriteDbContext>(Scope.ServiceProvider);
     }
 
     public Task InitializeAsync()
@@ -37,8 +40,8 @@ public abstract class TestBase : IClassFixture<IntegrationTestsWebFactory>, IAsy
     {
         var volunteer = Fixture.CreateVolunteer();
 
-        await DbContext.Volunteers.AddAsync(volunteer);
-        await DbContext.SaveChangesAsync();
+        await VolunteerWriteDbContext.Volunteers.AddAsync(volunteer);
+        await VolunteerWriteDbContext.SaveChangesAsync();
 
         return volunteer.Id;
     }
@@ -52,8 +55,8 @@ public abstract class TestBase : IClassFixture<IntegrationTestsWebFactory>, IAsy
             volunteers.Add(volunteer);
         }
 
-        await DbContext.Volunteers.AddRangeAsync(volunteers);
-        await DbContext.SaveChangesAsync();
+        await VolunteerWriteDbContext.AddRangeAsync(volunteers);
+        await VolunteerWriteDbContext.SaveChangesAsync();
 
         return volunteers.Select(v => v.Id.Value).ToArray();
     }
@@ -65,8 +68,8 @@ public abstract class TestBase : IClassFixture<IntegrationTestsWebFactory>, IAsy
         var breed = Fixture.CreateBreed();
         species.AddBreed(breed);
 
-        await DbContext.Specieses.AddAsync(species);
-        await DbContext.SaveChangesAsync();
+        await SpeciesWriteDbContext.AddAsync(species);
+        await SpeciesWriteDbContext.SaveChangesAsync();
 
         return (species.Id.Value, breed.Id.Value);
     }
@@ -75,16 +78,16 @@ public abstract class TestBase : IClassFixture<IntegrationTestsWebFactory>, IAsy
     {
         var pet = Fixture.CreatePet(speciesId, breedId);
 
-        var volunteer = await DbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
+        var volunteer = await VolunteerWriteDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == volunteerId);
 
         if (volunteer == null)
         {
             var id = await SeedVolunteer();
-            volunteer = await DbContext.Volunteers.FirstAsync(v => v.Id == id);
+            volunteer = await VolunteerWriteDbContext.Volunteers.FirstAsync(v => v.Id == id);
         }
 
         volunteer.AddPet(pet);
-        await DbContext.SaveChangesAsync();
+        await VolunteerWriteDbContext.SaveChangesAsync();
 
         return pet.Id.Value;
     }

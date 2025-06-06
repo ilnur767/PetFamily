@@ -1,9 +1,11 @@
 ﻿using System.Net.Mail;
 using AutoFixture;
-using PetFamily.Application.Volunteers.Commands.AddPet;
-using PetFamily.Application.Volunteers.Commands.Create;
-using PetFamily.Domain.Specieses;
-using PetFamily.Domain.Volunteers;
+using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Specieses.Domain.Specieses;
+using PetFamily.Volunteers.Application.Commands.AddPet;
+using PetFamily.Volunteers.Application.Commands.Create;
+using PetFamily.Volunteers.Domain.Entities;
+using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.IntegrationTests;
 
