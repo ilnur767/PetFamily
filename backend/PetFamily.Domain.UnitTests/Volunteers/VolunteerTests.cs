@@ -1,6 +1,7 @@
 using FluentAssertions;
-using PetFamily.Domain.Specieses;
-using PetFamily.Domain.Volunteers;
+using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Volunteers.Domain.Entities;
+using PetFamily.Volunteers.Domain.ValueObjects;
 using Xunit;
 
 namespace PetFamily.UnitTests.Volunteers;

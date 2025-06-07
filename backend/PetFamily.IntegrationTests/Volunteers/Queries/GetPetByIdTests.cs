@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using PetFamily.Application.Dtos;
-using PetFamily.Application.Volunteers.Queries.GetPetById;
+using PetFamily.Core.Dtos;
 using PetFamily.IntegrationTests.Common;
+using PetFamily.Volunteers.Application.Queries.GetPetById;
 using Xunit;
 
 namespace PetFamily.IntegrationTests.Volunteers.Queries;

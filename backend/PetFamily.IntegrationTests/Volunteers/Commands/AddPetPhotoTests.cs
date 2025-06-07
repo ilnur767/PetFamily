@@ -1,9 +1,9 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using PetFamily.Application.Volunteers.Commands.AddPetPhoto;
 using PetFamily.IntegrationTests.Common;
 using PetFamily.IntegrationTests.Helpers;
+using PetFamily.Volunteers.Application.Commands.AddPetPhoto;
 using Xunit;
 
 namespace PetFamily.IntegrationTests.Volunteers.Commands;
@@ -32,7 +32,7 @@ public class AddPetPhotoTests : CommandTestBase<IReadOnlyCollection<string>, Add
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
 
-        var volunteer = await DbContext.Volunteers
+        var volunteer = await VolunteerWriteDbContext.Volunteers
             .FirstOrDefaultAsync();
 
         volunteer.Should().NotBeNull();
