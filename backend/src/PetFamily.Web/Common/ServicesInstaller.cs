@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.OpenApi.Models;
 using PetFamily.Files.Application;
 using PetFamily.Files.Infrastructure;
 using PetFamily.Files.Presentation;
@@ -19,11 +20,7 @@ public static class ServicesInstaller
         AddLogger(configuration);
 
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(options =>
-        {
-            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-        });
+        AddSwagger(services);
 
         services.AddControllers();
 
@@ -45,6 +42,31 @@ public static class ServicesInstaller
             .AddFilesContract();
 
         services.AddSerilog();
+
+        return services;
+    }
+
+    private static IServiceCollection AddSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+            options.AddSecurityDefinition("Bearer",
+                new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } }
+            });
+        });
 
         return services;
     }

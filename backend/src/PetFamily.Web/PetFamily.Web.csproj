@@ -23,8 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Files\PetFamily.Files.Infrastructure\PetFamily.Files.Infrastructure.csproj"/>
     <ProjectReference Include="..\Files\PetFamily.Files.Presentation\PetFamily.Files.Presentation.csproj"/>
-    <ProjectReference Include="..\PetFamily.Core\PetFamily.Core.csproj"/>
-    <ProjectReference Include="..\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj"/>
+    <ProjectReference Include="..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
+    <ProjectReference Include="..\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
     <ProjectReference Include="..\Specieses\PetFamily.Specieses.Infrastructure\PetFamily.Specieses.Infrastructure.csproj"/>
     <ProjectReference Include="..\Specieses\PetFamily.Specieses.Presentation\PetFamily.Specieses.Presentation.csproj"/>
     <ProjectReference Include="..\Volunteers\PetFamily.Volunteers.Infrastructure\PetFamily.Volunteers.Infrastructure.csproj"/>

@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\PetFamily.Web\PetFamily.Web.csproj"/>
+    <ProjectReference Include="..\src\Shared\PetFamily.Framework\PetFamily.Framework.csproj" />
   </ItemGroup>
 
 </Project>
