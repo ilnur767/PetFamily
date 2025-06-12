@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Files.Application.DeleteFile;
 using PetFamily.Framework;
 
 namespace PetFamily.Files.Presentation.Delete;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class FilesController : ControllerBase

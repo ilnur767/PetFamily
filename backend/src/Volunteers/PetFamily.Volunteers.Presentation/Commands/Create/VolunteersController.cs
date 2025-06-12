@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
@@ -6,6 +7,7 @@ using PetFamily.Volunteers.Application.Commands.Create;
 
 namespace PetFamily.Volunteers.Presentation.Commands.Create;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class VolunteersController : ControllerBase

@@ -1,5 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.OpenApi.Models;
+using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Presentation;
 using PetFamily.Files.Application;
 using PetFamily.Files.Infrastructure;
 using PetFamily.Files.Presentation;
@@ -40,6 +43,11 @@ public static class ServicesInstaller
             .AddFilesApplication()
             .AddFilesInfrastructure(configuration)
             .AddFilesContract();
+
+        services
+            .AddAccountsApplication()
+            .AddAccountsPresentation(configuration)
+            .AddAccountsInfrastructure(configuration);
 
         services.AddSerilog();
 

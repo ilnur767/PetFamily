@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Dtos;
 using PetFamily.Core.Models;
@@ -6,6 +7,7 @@ using PetFamily.Volunteers.Application.Queries.GetPetsWithPagination;
 
 namespace PetFamily.Volunteers.Presentation.Queries.GetPetsWithPagination;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class VolunteersController : ControllerBase

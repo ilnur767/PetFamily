@@ -33,5 +33,18 @@ public static class Errors
 
             return Error.Validation(InvalidValueCode, $"invalid{label}length");
         }
+
+        public static Error AlreadyExists()
+        {
+            return Error.NotFound("record.already.exists", "Record already exists");
+        }
+    }
+
+    public static class User
+    {
+        public static Error InvalidCredentials()
+        {
+            return Error.Validation("credentials.is.invalid", "Your credentials is invalid");
+        }
     }
 }

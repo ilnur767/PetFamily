@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
@@ -7,6 +8,7 @@ using static PetFamily.Framework.ResponseExtensions;
 
 namespace PetFamily.Volunteers.Presentation.Commands.AddPetPhoto;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class VolunteersController : ControllerBase
