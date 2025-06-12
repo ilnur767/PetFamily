@@ -14,6 +14,9 @@ public class AccountsController : ControllerBase
         _registerUserCommandHandler = registerUserCommandHandler;
     }
 
+    /// <summary>
+    ///     Зарегистрировать пользователя.
+    /// </summary>
     [HttpPost("registration")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterRequest request,

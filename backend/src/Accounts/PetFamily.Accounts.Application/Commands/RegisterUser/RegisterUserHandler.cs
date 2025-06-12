@@ -17,12 +17,12 @@ public sealed class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
 
     public async Task<UnitResult<ErrorList>> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        // var user = await _userManager.FindByEmailAsync(command.Email);
-        //
-        // if (user != null)
-        // {
-        //     return Errors.General.AlreadyExists().ToErrorList();
-        // }
+        var existedUser = await _userManager.FindByEmailAsync(command.Email);
+
+        if (existedUser != null)
+        {
+            return Errors.General.AlreadyExists().ToErrorList();
+        }
 
         var user = new User { Email = command.Email, UserName = command.Email };
 

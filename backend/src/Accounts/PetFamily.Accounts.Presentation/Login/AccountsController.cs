@@ -14,6 +14,9 @@ public class AccountsController : ControllerBase
         _loginUserCommandHandler = loginUserCommandHandler;
     }
 
+    /// <summary>
+    ///     Выполнить вход и получить токен доступа.
+    /// </summary>
     [HttpPost("login")]
     public async Task<IActionResult> Login(
         LoginUserRequest userRequest,
