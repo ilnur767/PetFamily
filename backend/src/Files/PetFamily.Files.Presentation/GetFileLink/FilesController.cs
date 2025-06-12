@@ -11,6 +11,9 @@ namespace PetFamily.Files.Presentation.GetFileLink;
 [Route("[controller]")]
 public class FilesController : ControllerBase
 {
+    /// <summary>
+    ///     Получить ссылку на файл.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<string>> GetFileLink(
         [FromServices] GetFileLinkHandler getFileLinkHandler,

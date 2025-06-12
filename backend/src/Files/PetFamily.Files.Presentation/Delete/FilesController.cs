@@ -10,6 +10,9 @@ namespace PetFamily.Files.Presentation.Delete;
 [Route("[controller]")]
 public class FilesController : ControllerBase
 {
+    /// <summary>
+    ///     Удалить файл.
+    /// </summary>
     [HttpDelete]
     public async Task<ActionResult<string>> Delete(
         [FromServices] DeleteFileHandler deleteFileHandler,

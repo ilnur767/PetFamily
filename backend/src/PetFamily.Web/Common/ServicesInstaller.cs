@@ -13,6 +13,7 @@ using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Infrastructure;
 using PetFamily.Volunteers.Presentation;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PetFamily.Web.Common;
 
@@ -58,8 +59,7 @@ public static class ServicesInstaller
     {
         services.AddSwaggerGen(options =>
         {
-            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            IncludeXmlComments(options);
 
             options.AddSecurityDefinition("Bearer",
                 new OpenApiSecurityScheme
@@ -77,6 +77,25 @@ public static class ServicesInstaller
         });
 
         return services;
+    }
+
+    private static void IncludeXmlComments(SwaggerGenOptions options)
+    {
+        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+        var presentationProjectFiles = Directory.GetFiles(AppContext.BaseDirectory, "*Presentation.xml", SearchOption.AllDirectories);
+
+        foreach (var projectFile in presentationProjectFiles)
+        {
+            // XML-файл документации из другого проекта
+            var otherProjectXmlPath = Path.Combine(AppContext.BaseDirectory, projectFile);
+
+            if (File.Exists(otherProjectXmlPath))
+            {
+                options.IncludeXmlComments(otherProjectXmlPath);
+            }
+        }
     }
 
     private static void AddLogger(IConfiguration configuration)

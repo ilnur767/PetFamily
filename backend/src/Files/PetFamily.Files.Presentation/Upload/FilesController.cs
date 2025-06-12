@@ -12,6 +12,9 @@ namespace PetFamily.Files.Presentation.Upload;
 [Route("[controller]")]
 public class FilesController : ControllerBase
 {
+    /// <summary>
+    ///     Загрузить файл.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<string>> UploadFiles(IFormFile file,
         [FromServices] UploadFileHandler uploadFileHandler,
