@@ -5,7 +5,7 @@ using PetFamily.SharedKernel.Common;
 
 namespace PetFamily.Files.Application.GetFileLink;
 
-public class GetFileLinkHandler
+public class GetFileLinkHandler : ICommandHandler<string, GetFileLinkCommand>
 {
     private readonly IFileProvider _fileProvider;
 
@@ -14,14 +14,14 @@ public class GetFileLinkHandler
         _fileProvider = fileProvider;
     }
 
-    public async Task<Result<string, Error>> Handle(GetFileLinkCommand fileCommand, CancellationToken cancellationToken)
+    public async Task<Result<string, ErrorList>> Handle(GetFileLinkCommand fileCommand, CancellationToken cancellationToken)
     {
         var result =
             await _fileProvider.GetPresignedUrl(fileCommand.FileName, fileCommand.BucketName, cancellationToken);
 
         if (result.IsFailure)
         {
-            return result.Error;
+            return result.Error.ToErrorList();
         }
 
         return result.Value;

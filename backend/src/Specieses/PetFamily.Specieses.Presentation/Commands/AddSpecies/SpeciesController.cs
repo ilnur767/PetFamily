@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
@@ -7,6 +8,7 @@ using PetFamily.Specieses.Contracts.Requests;
 
 namespace PetFamily.Specieses.Presentation.Commands.AddSpecies;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class SpeciesController : ControllerBase

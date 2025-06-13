@@ -6,9 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\PetFamily.Files.Presentation.xml</DocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\PetFamily.Framework\PetFamily.Framework.csproj"/>
-    <ProjectReference Include="..\..\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj"/>
+    <ProjectReference Include="..\..\Shared\PetFamily.Framework\PetFamily.Framework.csproj"/>
+    <ProjectReference Include="..\..\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj"/>
     <ProjectReference Include="..\PetFamily.Files.Application\PetFamily.Files.Application.csproj"/>
     <ProjectReference Include="..\PetFamily.Files.Contracts\PetFamily.Files.Contracts.csproj"/>
   </ItemGroup>

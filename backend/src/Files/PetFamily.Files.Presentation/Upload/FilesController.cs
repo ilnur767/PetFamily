@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Models;
 using PetFamily.Files.Application.UploadFile;
@@ -6,10 +7,14 @@ using PetFamily.Framework;
 
 namespace PetFamily.Files.Presentation.Upload;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class FilesController : ControllerBase
 {
+    /// <summary>
+    ///     Загрузить файл.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<string>> UploadFiles(IFormFile file,
         [FromServices] UploadFileHandler uploadFileHandler,

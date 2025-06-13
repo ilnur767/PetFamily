@@ -1,4 +1,8 @@
 ﻿using System.Reflection;
+using Microsoft.OpenApi.Models;
+using PetFamily.Accounts.Application;
+using PetFamily.Accounts.Infrastructure;
+using PetFamily.Accounts.Presentation;
 using PetFamily.Files.Application;
 using PetFamily.Files.Infrastructure;
 using PetFamily.Files.Presentation;
@@ -9,6 +13,7 @@ using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Infrastructure;
 using PetFamily.Volunteers.Presentation;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PetFamily.Web.Common;
 
@@ -19,11 +24,7 @@ public static class ServicesInstaller
         AddLogger(configuration);
 
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(options =>
-        {
-            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-        });
+        AddSwagger(services);
 
         services.AddControllers();
 
@@ -44,9 +45,57 @@ public static class ServicesInstaller
             .AddFilesInfrastructure(configuration)
             .AddFilesContract();
 
+        services
+            .AddAccountsApplication()
+            .AddAccountsPresentation(configuration)
+            .AddAccountsInfrastructure(configuration);
+
         services.AddSerilog();
 
         return services;
+    }
+
+    private static IServiceCollection AddSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
+            IncludeXmlComments(options);
+
+            options.AddSecurityDefinition("Bearer",
+                new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } }
+            });
+        });
+
+        return services;
+    }
+
+    private static void IncludeXmlComments(SwaggerGenOptions options)
+    {
+        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+        var presentationProjectFiles = Directory.GetFiles(AppContext.BaseDirectory, "*Presentation.xml", SearchOption.AllDirectories);
+
+        foreach (var projectFile in presentationProjectFiles)
+        {
+            // XML-файл документации из другого проекта
+            var otherProjectXmlPath = Path.Combine(AppContext.BaseDirectory, projectFile);
+
+            if (File.Exists(otherProjectXmlPath))
+            {
+                options.IncludeXmlComments(otherProjectXmlPath);
+            }
+        }
     }
 
     private static void AddLogger(IConfiguration configuration)

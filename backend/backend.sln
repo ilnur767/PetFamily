@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Web", "src\PetFamily.Web\PetFamily.Web.csproj", "{29DAE635-50E5-4479-9DE2-9FB093E120EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.SharedKernel", "src\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj", "{877025A3-A0CB-4F5E-9F57-FADCA66EB0E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.SharedKernel", "src\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj", "{877025A3-A0CB-4F5E-9F57-FADCA66EB0E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Core", "src\PetFamily.Core\PetFamily.Core.csproj", "{6FF2D41D-6C21-4455-9BF2-0F0F91A38913}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Core", "src\Shared\PetFamily.Core\PetFamily.Core.csproj", "{6FF2D41D-6C21-4455-9BF2-0F0F91A38913}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C3DF862D-8C5E-4B75-B5C9-4133439905DD}"
 	ProjectSection(SolutionItems) = preProject
@@ -53,11 +53,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Files.Contracts",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Files.Infrastructure", "src\Files\PetFamily.Files.Infrastructure\PetFamily.Files.Infrastructure.csproj", "{BDBEF4AD-CD4B-454E-9A7A-9D24F58E38DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Framework", "src\PetFamily.Framework\PetFamily.Framework.csproj", "{BB4FD391-7B78-4C32-B2FA-7A1296A95207}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Framework", "src\Shared\PetFamily.Framework\PetFamily.Framework.csproj", "{BB4FD391-7B78-4C32-B2FA-7A1296A95207}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{776CE65B-FC7D-47C8-85F4-21ADB3285434}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Files.Presentation", "src\Files\PetFamily.Files.Presentation\PetFamily.Files.Presentation.csproj", "{4D94C57D-55C2-409C-ACFE-B016CE4E7C8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounts", "Accounts", "{4DB26153-3B40-4391-BB84-47724957CE59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Application", "src\Accounts\PetFamily.Accounts.Application\PetFamily.Accounts.Application.csproj", "{CA5668AF-55A6-45A4-ACA2-6D4CCE1B3296}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Domain", "src\Accounts\PetFamily.Accounts.Domain\PetFamily.Accounts.Domain.csproj", "{4BBCC894-D095-4480-BEF8-730364A395D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Contracts", "src\Accounts\PetFamily.Accounts.Contracts\PetFamily.Accounts.Contracts.csproj", "{88A9CCAA-4346-42B8-B058-C4F3B343F1E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Infrastructure", "src\Accounts\PetFamily.Accounts.Infrastructure\PetFamily.Accounts.Infrastructure.csproj", "{F49FD635-7D50-4DF6-961D-19A73B2726EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetFamily.Accounts.Presentation", "src\Accounts\PetFamily.Accounts.Presentation\PetFamily.Accounts.Presentation.csproj", "{E21263EC-02B7-491A-A8B4-CDA10A5F8CD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,6 +160,26 @@ Global
 		{4D94C57D-55C2-409C-ACFE-B016CE4E7C8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D94C57D-55C2-409C-ACFE-B016CE4E7C8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D94C57D-55C2-409C-ACFE-B016CE4E7C8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA5668AF-55A6-45A4-ACA2-6D4CCE1B3296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA5668AF-55A6-45A4-ACA2-6D4CCE1B3296}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA5668AF-55A6-45A4-ACA2-6D4CCE1B3296}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA5668AF-55A6-45A4-ACA2-6D4CCE1B3296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BBCC894-D095-4480-BEF8-730364A395D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BBCC894-D095-4480-BEF8-730364A395D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BBCC894-D095-4480-BEF8-730364A395D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BBCC894-D095-4480-BEF8-730364A395D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88A9CCAA-4346-42B8-B058-C4F3B343F1E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88A9CCAA-4346-42B8-B058-C4F3B343F1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88A9CCAA-4346-42B8-B058-C4F3B343F1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88A9CCAA-4346-42B8-B058-C4F3B343F1E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F49FD635-7D50-4DF6-961D-19A73B2726EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F49FD635-7D50-4DF6-961D-19A73B2726EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F49FD635-7D50-4DF6-961D-19A73B2726EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F49FD635-7D50-4DF6-961D-19A73B2726EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E21263EC-02B7-491A-A8B4-CDA10A5F8CD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E21263EC-02B7-491A-A8B4-CDA10A5F8CD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E21263EC-02B7-491A-A8B4-CDA10A5F8CD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E21263EC-02B7-491A-A8B4-CDA10A5F8CD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7730C0DF-4103-4D61-A82C-8B1012B16C5D} = {AEA7AF91-BA08-4CB3-9BE6-B21C718B5AD8}
@@ -169,5 +201,10 @@ Global
 		{877025A3-A0CB-4F5E-9F57-FADCA66EB0E5} = {776CE65B-FC7D-47C8-85F4-21ADB3285434}
 		{BB4FD391-7B78-4C32-B2FA-7A1296A95207} = {776CE65B-FC7D-47C8-85F4-21ADB3285434}
 		{4D94C57D-55C2-409C-ACFE-B016CE4E7C8E} = {85DAFBA0-E0BC-4C0B-86D6-82501E0FEE4D}
+		{CA5668AF-55A6-45A4-ACA2-6D4CCE1B3296} = {4DB26153-3B40-4391-BB84-47724957CE59}
+		{4BBCC894-D095-4480-BEF8-730364A395D2} = {4DB26153-3B40-4391-BB84-47724957CE59}
+		{88A9CCAA-4346-42B8-B058-C4F3B343F1E7} = {4DB26153-3B40-4391-BB84-47724957CE59}
+		{F49FD635-7D50-4DF6-961D-19A73B2726EF} = {4DB26153-3B40-4391-BB84-47724957CE59}
+		{E21263EC-02B7-491A-A8B4-CDA10A5F8CD8} = {4DB26153-3B40-4391-BB84-47724957CE59}
 	EndGlobalSection
 EndGlobal

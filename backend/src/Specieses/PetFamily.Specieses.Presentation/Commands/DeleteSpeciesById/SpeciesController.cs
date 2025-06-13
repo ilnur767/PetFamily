@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Framework;
 using PetFamily.Specieses.Application.Commands.DeleteSpeciesById;
 
 namespace PetFamily.Specieses.Presentation.Commands.DeleteSpeciesById;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class SpeciesController : ControllerBase

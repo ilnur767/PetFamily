@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Framework;
 using PetFamily.Volunteers.Application.Commands.UpdatePetMainPhoto;
 
 namespace PetFamily.Volunteers.Presentation.Commands.UpdatePetMainPhoto;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class VolunteersController : ControllerBase
