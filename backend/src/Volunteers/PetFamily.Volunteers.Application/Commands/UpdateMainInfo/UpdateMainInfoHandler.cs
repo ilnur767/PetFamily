@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel.Common;
-using PetFamily.Volunteers.Domain.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.UpdateMainInfo;
 

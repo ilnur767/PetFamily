@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using JetBrains.Annotations;
 using PetFamily.Core.Validation;
-using PetFamily.Volunteers.Domain.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.UpdateRequisites;
 

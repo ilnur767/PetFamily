@@ -1,7 +1,7 @@
 using FluentValidation;
 using JetBrains.Annotations;
 using PetFamily.Core.Validation;
-using PetFamily.Volunteers.Domain.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.Create;
 
@@ -15,11 +15,5 @@ public sealed class CreateVolunteerCommandValidator : AbstractValidator<CreateVo
 
         RuleFor(c => new { c.FirstName, c.LastName, c.MiddleName })
             .MustBeValueObject(c => FullName.Create(c.FirstName, c.LastName, c.MiddleName));
-
-        RuleForEach(c => c.SocialMedias)
-            .MustBeValueObject(s => SocialMedia.Create(s.Name, s.Link));
-
-        RuleForEach(c => c.Requisites)
-            .MustBeValueObject(r => Requisite.Create(r.Name, r.Description));
     }
 }

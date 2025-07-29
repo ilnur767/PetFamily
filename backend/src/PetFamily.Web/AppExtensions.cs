@@ -1,4 +1,5 @@
-﻿using PetFamily.Specieses.Infrastructure;
+﻿using PetFamily.Accounts.Infrastructure;
+using PetFamily.Specieses.Infrastructure;
 using PetFamily.Volunteers.Infrastructure;
 
 namespace PetFamily.Web;
@@ -9,5 +10,6 @@ public static class AppExtensions
     {
         await app.ApplySpecicesMigration();
         await app.ApplyVolunteersMigration();
+        await app.ApplyAccountsMigration();
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
 using PetFamily.Specieses.Application.Commands.AddBreed;
 using PetFamily.Specieses.Contracts.Requests;
 
@@ -11,6 +12,7 @@ namespace PetFamily.Specieses.Presentation.Commands.AddBreed;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Permission(PermissionTypes.Species.Create)]
 public class SpeciesController : ControllerBase
 {
     /// <summary>

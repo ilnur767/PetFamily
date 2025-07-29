@@ -55,28 +55,6 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             .WithOne()
             .HasForeignKey("volunteer_id");
 
-        builder.OwnsOne(v => v.SocialMediasList, sml =>
-        {
-            sml.ToJson();
-
-            sml.OwnsMany(s => s.SocialMedias, sm =>
-            {
-                sm.Property(s => s.Name).IsRequired().HasMaxLength(MaxLowTextLength);
-                sm.Property(s => s.Link).IsRequired().HasMaxLength(MaxLowTextLength);
-            });
-        });
-
-        builder.OwnsOne(v => v.RequisiteList, rl =>
-        {
-            rl.ToJson();
-
-            rl.OwnsMany(s => s.Requisites, r =>
-            {
-                r.Property(s => s.Name).IsRequired().HasMaxLength(MaxLowTextLength);
-                r.Property(s => s.Description).IsRequired().HasMaxLength(MaxLowTextLength);
-            });
-        });
-
         builder.Property(v => v.IsDeleted).HasColumnName("is_deleted");
         builder.Property(v => v.DeletedAt).HasColumnName("deleted_at");
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
 using PetFamily.Volunteers.Application.Commands.UpdateRequisites;
 
 namespace PetFamily.Volunteers.Presentation.Commands.UpdateRequisites;
@@ -10,6 +11,7 @@ namespace PetFamily.Volunteers.Presentation.Commands.UpdateRequisites;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Permission(PermissionTypes.Volunteers.Update)]
 public class VolunteersController : ControllerBase
 {
     /// <summary>

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel.Common;
-using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.UpdateSocialMedias;
 
@@ -43,10 +42,6 @@ public sealed class UpdateSocialMediasHandler : ICommandHandler<Guid, UpdateSoci
         }
 
         var volunteer = volunteerResult.Value;
-        volunteer.UpdateSocialMedias(
-            command.UpdateSocialMediasDto.Select(r => SocialMedia.Create(r.Name, r.Link).Value)
-                .ToList());
-
         await _volunteersRepository.Save(volunteer, cancellationToken);
 
         _logger.LogInformation("Updated social medias for volunteer with id: {volunteerId}", volunteer.Id.Value);

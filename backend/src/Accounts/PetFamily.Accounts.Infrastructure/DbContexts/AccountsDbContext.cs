@@ -3,19 +3,26 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using PetFamily.Accounts.Application.DataModels;
+using PetFamily.Accounts.Domain;
+using PetFamily.Accounts.Infrastructure.Configurations;
 using PetFamily.Core.Common;
 
 namespace PetFamily.Accounts.Infrastructure.DbContexts;
 
-public class AuthorizationDbContext : IdentityDbContext<User, Role, Guid>
+public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
 {
     private readonly IConfiguration _configuration;
 
-    public AuthorizationDbContext(IConfiguration configuration)
+    public AccountsDbContext(IConfiguration configuration)
     {
         _configuration = configuration;
     }
+
+    public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
+    public DbSet<AdminAccount> AdminAccounts { get; set; }
+    public DbSet<VolunteerAccount> VolunteerAccounts { get; set; }
+    public DbSet<ParticipantAccount> ParticipantAccounts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -28,11 +35,15 @@ public class AuthorizationDbContext : IdentityDbContext<User, Role, Guid>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>()
-            .ToTable("users");
+        modelBuilder.HasDefaultSchema("accounts");
 
-        modelBuilder.Entity<Role>()
-            .ToTable("roles");
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new AdminAccountConfiguration());
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
+        modelBuilder.ApplyConfiguration(new VolunteerAccountConfiguration());
+        modelBuilder.ApplyConfiguration(new ParticipantAccountConfiguration());
 
         modelBuilder.Entity<IdentityUserClaim<Guid>>()
             .ToTable("user_claims");

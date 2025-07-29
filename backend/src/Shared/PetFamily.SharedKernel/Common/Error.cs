@@ -8,6 +8,7 @@ public record Error
     {
         Code = code;
         Message = message;
+        Type = type;
     }
 
     public string Code { get; }

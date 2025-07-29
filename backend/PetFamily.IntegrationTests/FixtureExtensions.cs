@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using AutoFixture;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
 using PetFamily.Specieses.Domain.Specieses;
 using PetFamily.Volunteers.Application.Commands.AddPet;

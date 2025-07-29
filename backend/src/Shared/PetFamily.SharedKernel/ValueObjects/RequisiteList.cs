@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 
-namespace PetFamily.Volunteers.Domain.ValueObjects;
+namespace PetFamily.SharedKernel.ValueObjects;
 
 public class RequisiteList : ComparableValueObject
 {

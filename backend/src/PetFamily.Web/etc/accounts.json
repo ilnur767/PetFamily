@@ -1,0 +1,40 @@
+{
+  "Roles": {
+    "Admin": [
+      "volunteers.read",
+      "volunteers.create",
+      "volunteers.update",
+      "volunteers.delete",
+      "specieses.read",
+      "specieses.create",
+      "specieses.update",
+      "specieses.delete",
+      "volunteers.add.smth"
+    ],
+    "Volunteer": [
+      "volunteers.read",
+      "volunteers.create",
+      "volunteers.update",
+      "volunteers.delete"
+    ],
+    "Participant": [
+      "volunteers.read",
+      "specieses.read"
+    ]
+  },
+  "Permissions": {
+    "Volunteers": [
+      "volunteers.read",
+      "volunteers.create",
+      "volunteers.update",
+      "volunteers.delete",
+      "volunteers.add.smth"
+    ],
+    "Specieses": [
+      "specieses.read",
+      "specieses.create",
+      "specieses.update",
+      "specieses.delete"
+    ]
+  }
+}

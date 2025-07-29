@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using PetFamily.SharedKernel.Common;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
 using PetFamily.Volunteers.Domain.ValueObjects;
 
@@ -31,25 +32,11 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
 
     public PhoneNumber PhoneNumber { get; private set; }
 
-    public SocialMediaList? SocialMediasList { get; private set; }
-
-    public RequisiteList? RequisiteList { get; private set; }
-
     public IReadOnlyList<Pet> Pets => _pets;
 
     public int PetsFoundHomeCount => _pets.Count(p => p.Status.Status == PetStatusValue.FoundHome);
     public int PetsLookingForHomeCount => _pets.Count(p => p.Status.Status == PetStatusValue.LookingForHome);
     public int PetsNeedsHelpCount => _pets.Count(p => p.Status.Status == PetStatusValue.NeedsHelp);
-
-    public void UpdateRequisites(IEnumerable<Requisite> requisites)
-    {
-        RequisiteList = RequisiteList.Create(requisites.ToList());
-    }
-
-    public void UpdateSocialMedias(IEnumerable<SocialMedia> socialMedias)
-    {
-        SocialMediasList = SocialMediaList.Create(socialMedias.ToList());
-    }
 
     public void UpdateMainInfo(FullName fullName, string? description, int? workExperience, PhoneNumber phoneNumber,
         Email email)
@@ -157,11 +144,6 @@ public class Volunteer : SoftDeletableEntity<VolunteerId>
         }
 
         return pet;
-    }
-
-    public void UpdateRequisites(SocialMediaList socialMediasList)
-    {
-        SocialMediasList = socialMediasList;
     }
 
     public UnitResult<Error> MovePet(Pet pet, Position newPosition)
