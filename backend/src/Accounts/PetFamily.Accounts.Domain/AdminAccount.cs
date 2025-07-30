@@ -11,15 +11,13 @@ public class AdminAccount
     {
     }
 
-    public AdminAccount(FullName fullName, User user)
+    public AdminAccount(User user)
     {
         Id = Guid.NewGuid();
         User = user;
-        FullName = fullName;
     }
 
     public Guid Id { get; set; }
     public User User { get; set; }
     public Guid UserId { get; set; }
-    public FullName FullName { get; set; } = default!;
 }

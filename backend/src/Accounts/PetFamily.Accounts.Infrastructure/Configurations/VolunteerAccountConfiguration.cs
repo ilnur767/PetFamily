@@ -14,8 +14,10 @@ public class VolunteerAccountConfiguration : IEntityTypeConfiguration<VolunteerA
     {
         builder.ToTable("volunteer_accounts");
 
+        builder.Property(x => x.UserId).IsRequired().HasColumnName("user_id");
+
         builder.HasOne(v => v.User)
-            .WithOne()
+            .WithOne(u=>u.VolunteerAccount)
             .HasForeignKey<VolunteerAccount>(v => v.UserId);
 
         builder.Property(v => v.Certificates)

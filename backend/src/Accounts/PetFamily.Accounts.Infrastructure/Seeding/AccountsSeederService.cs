@@ -1,23 +1,25 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure.IdentityManagers;
 using PetFamily.Accounts.Infrastructure.Options;
+using PetFamily.Core.Abstractions;
+using PetFamily.Core.Models;
 using PetFamily.Framework;
-using PetFamily.SharedKernel.ValueObjects;
 
 namespace PetFamily.Accounts.Infrastructure.Seeding;
 
 public class AccountsSeederService
 {
-    private readonly AdminAccountManager _adminAccountManager;
     private readonly AdminOptions _adminOptions;
     private readonly ILogger<AccountsSeederService> _logger;
     private readonly PermissionManager _permissionManager;
     private readonly RoleManager<Role> _roleManager;
     private readonly RolePermissionManager _rolePermissionManager;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
     public AccountsSeederService(
@@ -26,7 +28,9 @@ public class AccountsSeederService
         PermissionManager permissionManager,
         RolePermissionManager rolePermissionManager,
         IOptions<AdminOptions> adminOptions,
-        ILogger<AccountsSeederService> logger, AdminAccountManager adminAccountManager)
+        ILogger<AccountsSeederService> logger,
+        [FromKeyedServices(UnitOfWorkTypes.Accounts)]
+        IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -34,10 +38,10 @@ public class AccountsSeederService
         _rolePermissionManager = rolePermissionManager;
         _adminOptions = adminOptions.Value;
         _logger = logger;
-        _adminAccountManager = adminAccountManager;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task SeedAsync()
+    public async Task SeedAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Seeding accounts...");
 
@@ -52,10 +56,10 @@ public class AccountsSeederService
 
         await SeedRolePermissions(seedData);
 
-        await CreateAdminIfNotExists();
+        await CreateAdminIfNotExists(cancellationToken);
     }
 
-    private async Task CreateAdminIfNotExists()
+    private async Task CreateAdminIfNotExists(CancellationToken cancellationToken)
     {
         var existsAdmin = await _userManager.FindByNameAsync(_adminOptions.UserName);
 
@@ -64,15 +68,36 @@ public class AccountsSeederService
             return;
         }
 
-        var role = await _roleManager.FindByNameAsync(AdminAccount.ADMIN)
-                   ?? throw new ApplicationException("Could not find admin role");
+        var adminUser = User.CreateAdmin(_adminOptions.UserName, _adminOptions.Email);
 
-        var adminUser = User.CreateAdmin(_adminOptions.UserName, _adminOptions.Email, role);
-        await _userManager.CreateAsync(adminUser, _adminOptions.Password);
+        try
+        {
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        var fullName = FullName.Create(_adminOptions.UserName, _adminOptions.UserName, _adminOptions.UserName).Value;
-        var adminAccount = new AdminAccount(fullName, adminUser);
-        await _adminAccountManager.CreateAdminAccount(adminAccount);
+            var adminResult = await _userManager.CreateAsync(adminUser, _adminOptions.Password);
+
+            if (!adminResult.Succeeded)
+            {
+                _logger.LogError(JsonSerializer.Serialize(adminResult.Errors));
+                await _unitOfWork.RollbackAsync(cancellationToken);
+                throw new ApplicationException("Could not create admin");
+            }
+
+            var roleReuslt = await _userManager.AddToRoleAsync(adminUser, AdminAccount.ADMIN);
+
+            if (!roleReuslt.Succeeded)
+            {
+                _logger.LogError(JsonSerializer.Serialize(roleReuslt.Errors));
+                await _unitOfWork.RollbackAsync(cancellationToken);
+                throw new ApplicationException("Could not create admin role");
+            }
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            await _unitOfWork.RollbackAsync(cancellationToken);
+        }
     }
 
     private async Task SeedRolePermissions(RolePermissionOptions seedData)

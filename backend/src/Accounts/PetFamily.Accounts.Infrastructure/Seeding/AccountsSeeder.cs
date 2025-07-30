@@ -13,8 +13,10 @@ public class AccountsSeeder
 
     public async Task SeedAsync()
     {
+        using var cts = new CancellationTokenSource();
+        var token = cts.Token;
         using var scope = _serviceScopeFactory.CreateScope();
         var service = scope.ServiceProvider.GetRequiredService<AccountsSeederService>();
-        await service.SeedAsync();
+        await service.SeedAsync(token);
     }
 }

@@ -10,15 +10,10 @@ public class AdminAccountConfiguration : IEntityTypeConfiguration<AdminAccount>
     {
         builder.ToTable("admin_accounts");
 
-        builder.HasOne(a => a.User)
-            .WithOne()
-            .HasForeignKey<AdminAccount>(a => a.UserId);
+        builder.Property(x => x.UserId).IsRequired().HasColumnName("user_id");
 
-        builder.ComplexProperty(a => a.FullName, fb =>
-        {
-            fb.Property(a => a.FirstName).HasColumnName("first_name").IsRequired();
-            fb.Property(a => a.LastName).HasColumnName("last_name").IsRequired();
-            fb.Property(a => a.MiddleName).HasColumnName("middle_name").IsRequired();
-        });
+        builder.HasOne(a => a.User)
+            .WithOne(u=>u.AdminAccount)
+            .HasForeignKey<AdminAccount>(a => a.UserId);
     }
 }

@@ -10,8 +10,10 @@ public class ParticipantAccountConfiguration : IEntityTypeConfiguration<Particip
     {
         builder.ToTable("participant_accounts");
 
+        builder.Property(x => x.UserId).IsRequired().HasColumnName("user_id");
+
         builder.HasOne(a => a.User)
-            .WithOne()
+            .WithOne(u=>u.ParticipantAccount)
             .HasForeignKey<ParticipantAccount>(a => a.UserId);
     }
 }
