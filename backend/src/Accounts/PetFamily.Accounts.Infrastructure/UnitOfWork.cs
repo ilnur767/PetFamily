@@ -1,4 +1,6 @@
-﻿using PetFamily.Accounts.Infrastructure.DbContexts;
+﻿using System.Data;
+using Microsoft.EntityFrameworkCore.Storage;
+using PetFamily.Accounts.Infrastructure.DbContexts;
 using PetFamily.Core.Abstractions;
 
 namespace PetFamily.Accounts.Infrastructure;
@@ -12,9 +14,11 @@ public class UnitOfWork : IUnitOfWork
         _accountsDbContext = accountsDbContext;
     }
 
-    public async Task BeginTransactionAsync(CancellationToken cancellationToken)
+    public async Task<IDbTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
     {
-        await _accountsDbContext.Database.BeginTransactionAsync(cancellationToken);
+        var transactionContext =  await _accountsDbContext.Database.BeginTransactionAsync(cancellationToken);
+
+        return transactionContext.GetDbTransaction();
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
