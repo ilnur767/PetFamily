@@ -6,7 +6,6 @@ using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel.Common;
 using PetFamily.Volunteers.Application.Commands.UpdateMainInfo;
-using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.UpdateRequisites;
 
@@ -43,9 +42,6 @@ public sealed class UpdateRequisitesHandler : ICommandHandler<Guid, UpdateRequis
         }
 
         var volunteer = volunteerResult.Value;
-        volunteer.UpdateRequisites(
-            command.UpdateRequisitesDto.Select(r => Requisite.Create(r.Name, r.Description).Value)
-                .ToList());
 
         await _volunteersRepository.Save(volunteer, cancellationToken);
 

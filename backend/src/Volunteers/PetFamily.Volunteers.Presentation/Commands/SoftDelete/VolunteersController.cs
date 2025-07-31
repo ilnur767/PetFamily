@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
+using PetFamily.Framework.Authorization;
 using PetFamily.Volunteers.Application.Commands.SoftDelete;
 using static PetFamily.Framework.ResponseExtensions;
 
@@ -10,6 +11,7 @@ namespace PetFamily.Volunteers.Presentation.Commands.SoftDelete;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Permission(PermissionTypes.Volunteers.Delete)]
 public class VolunteersController : ControllerBase
 {
     /// <summary>

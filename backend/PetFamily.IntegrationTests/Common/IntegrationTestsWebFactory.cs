@@ -75,6 +75,9 @@ public class IntegrationTestsWebFactory : WebApplicationFactory<Program>, IAsync
     private void ConfigureConfigs(WebHostBuilderContext context, IConfigurationBuilder builder)
     {
         builder.AddInMemoryCollection(new Dictionary<string, string?> { ["ConnectionStrings:Database"] = _dbContainer.GetConnectionString() });
+        builder.AddInMemoryCollection(new Dictionary<string, string?> { ["ADMIN:USERNAME"] = "admin" });
+        builder.AddInMemoryCollection(new Dictionary<string, string?> { ["ADMIN:EMAIL"] = "admin123@admin.com" });
+        builder.AddInMemoryCollection(new Dictionary<string, string?> { ["ADMIN:PASSWORD"] = "ADSFdfdsfdsdf@123" });
     }
 
     protected virtual void ConfigureDefaultServices(IServiceCollection services)

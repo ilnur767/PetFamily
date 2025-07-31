@@ -1,8 +1,8 @@
-﻿using PetFamily.Accounts.Application.DataModels;
+﻿using PetFamily.Accounts.Domain;
 
 namespace PetFamily.Accounts.Application.Abstractions;
 
 public interface ITokenProvider
 {
-    string GenerateAccessToken(User user, CancellationToken cancellationToken);
+    Task<string> GenerateAccessToken(User user, CancellationToken cancellationToken);
 }

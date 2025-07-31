@@ -1,11 +1,14 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using PetFamily.Accounts.Application.DataModels;
+using PetFamily.Accounts.Contracts;
+using PetFamily.Accounts.Domain;
 using PetFamily.Accounts.Infrastructure;
 using PetFamily.Accounts.Infrastructure.DbContexts;
+using PetFamily.Framework.Authorization;
 
 namespace PetFamily.Accounts.Presentation;
 
@@ -13,9 +16,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddAccountsPresentation(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddIdentity<User, Role>(options => { options.User.RequireUniqueEmail = true; })
-            .AddEntityFrameworkStores<AuthorizationDbContext>();
-
         services
             .AddAuthentication(options =>
             {
@@ -36,10 +36,20 @@ public static class DependencyInjection
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
+        services.AddAuthorization();
+
+        services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+
+        services.AddIdentity<User, Role>(options => { options.User.RequireUniqueEmail = true; })
+            .AddEntityFrameworkStores<AccountsDbContext>();
+
+        return services.AddScoped<IAccountsContract, AccountsContract>();
 
         return services;
     }

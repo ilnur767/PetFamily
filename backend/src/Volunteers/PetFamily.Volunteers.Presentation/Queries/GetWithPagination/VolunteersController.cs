@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Dtos;
 using PetFamily.Core.Models;
+using PetFamily.Framework.Authorization;
 using PetFamily.Volunteers.Application.Queries.GetWithPagination;
 
 namespace PetFamily.Volunteers.Presentation.Queries.GetWithPagination;
@@ -10,6 +11,7 @@ namespace PetFamily.Volunteers.Presentation.Queries.GetWithPagination;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Permission(PermissionTypes.Volunteers.Read)]
 public class VolunteersController : ControllerBase
 {
     /// <summary>

@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel.Common;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
 using PetFamily.Volunteers.Domain.Entities;
-using PetFamily.Volunteers.Domain.ValueObjects;
 
 namespace PetFamily.Volunteers.Application.Commands.Create;
 
@@ -42,21 +42,7 @@ public sealed class CreateVolunteerHandler : ICommandHandler<Guid, CreateVolunte
 
         var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
 
-        var requisites = command.Requisites?.Select(r => Requisite.Create(r.Name, r.Description).Value).ToList();
-
-        var socialMedias = command.SocialMedias?.Select(r => SocialMedia.Create(r.Name, r.Link).Value).ToList();
-
         var volunteer = new Volunteer(volunteerId, fullName, email, phoneNumber);
-
-        if (requisites != null && requisites.Count != 0)
-        {
-            volunteer.UpdateRequisites(requisites);
-        }
-
-        if (socialMedias != null && socialMedias.Count != 0)
-        {
-            volunteer.UpdateSocialMedias(socialMedias);
-        }
 
         await _volunteersRepository.Add(volunteer, cancellationToken);
 

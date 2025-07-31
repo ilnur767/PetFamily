@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 using PetFamily.SharedKernel.Common;
 
-namespace PetFamily.Volunteers.Domain.ValueObjects;
+namespace PetFamily.SharedKernel.ValueObjects;
 
 public class PhoneNumber : ComparableValueObject
 {

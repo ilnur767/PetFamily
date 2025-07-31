@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
 using PetFamily.Volunteers.Application.Commands.AddPet;
 
 namespace PetFamily.Volunteers.Presentation.Commands.AddPet;
@@ -10,6 +11,7 @@ namespace PetFamily.Volunteers.Presentation.Commands.AddPet;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Permission(PermissionTypes.Pet.Create)]
 public class VolunteersController : ControllerBase
 {
     /// <summary>

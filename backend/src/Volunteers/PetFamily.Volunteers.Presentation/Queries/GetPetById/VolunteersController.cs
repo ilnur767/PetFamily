@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Dtos;
 using PetFamily.Core.Models;
+using PetFamily.Framework.Authorization;
 using PetFamily.Volunteers.Application.Queries.GetPetById;
 
 namespace PetFamily.Volunteers.Presentation.Queries.GetPetById;
@@ -10,6 +11,7 @@ namespace PetFamily.Volunteers.Presentation.Queries.GetPetById;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Permission(PermissionTypes.Pet.Read)]
 public class VolunteersController : ControllerBase
 {
     /// <summary>

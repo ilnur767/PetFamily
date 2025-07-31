@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using CSharpFunctionalExtensions;
 using PetFamily.SharedKernel.Common;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
 using PetFamily.Volunteers.Domain.ValueObjects;
 using static PetFamily.SharedKernel.Common.ValidationMessageConstants;

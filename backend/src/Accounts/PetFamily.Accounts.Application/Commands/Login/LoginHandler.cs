@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Application.Abstractions;
-using PetFamily.Accounts.Application.DataModels;
+using PetFamily.Accounts.Domain;
 using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel.Common;
 
@@ -37,7 +37,7 @@ public class LoginHandler : ICommandHandler<string, LoginUserCommand>
             return Errors.User.InvalidCredentials().ToErrorList();
         }
 
-        var token = _tokenProvider.GenerateAccessToken(user, cancellationToken);
+        var token = await _tokenProvider.GenerateAccessToken(user, cancellationToken);
 
         _logger.LogInformation($"User '{user.Email}' logged in.");
 

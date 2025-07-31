@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
+using PetFamily.Framework.Authorization;
 using PetFamily.Volunteers.Application.Commands.Create;
 
 namespace PetFamily.Volunteers.Presentation.Commands.Create;
 
-[Authorize]
+[Permission(PermissionTypes.Volunteers.Create)]
 [ApiController]
 [Route("[controller]")]
 public class VolunteersController : ControllerBase
@@ -29,9 +29,7 @@ public class VolunteersController : ControllerBase
             createVolunteerRequest.LastName,
             createVolunteerRequest.MiddleName,
             createVolunteerRequest.Email,
-            createVolunteerRequest.PhoneNumber,
-            createVolunteerRequest.Requisites?.Select(r => new CreateRequisiteCommand(r.Name, r.Description)),
-            createVolunteerRequest.SocialMedias?.Select(s => new CreateSocialMediaCommand(s.Name, s.Link))
+            createVolunteerRequest.PhoneNumber
         );
 
         var result = await createVolunteerHandler.Handle(createCommand, cancellationToken);

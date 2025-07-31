@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using PetFamily.Core.Validation;
 using PetFamily.SharedKernel.Common;
-using PetFamily.Volunteers.Domain.ValueObjects;
+using PetFamily.SharedKernel.ValueObjects;
 using static PetFamily.SharedKernel.Common.DataLimitsConstants;
 
 namespace PetFamily.Volunteers.Application.Commands.UpdatePet;

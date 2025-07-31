@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Dtos;
 using PetFamily.Core.Models;
+using PetFamily.Framework.Authorization;
 using PetFamily.Specieses.Application.Queries;
 using PetFamily.Specieses.Contracts.Requests;
 
@@ -11,6 +12,7 @@ namespace PetFamily.Specieses.Presentation.Queries.GetBreedsBySpeciesIdWithPagin
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Permission(PermissionTypes.Species.Read)]
 public class SpeciesController : ControllerBase
 {
     /// <summary>

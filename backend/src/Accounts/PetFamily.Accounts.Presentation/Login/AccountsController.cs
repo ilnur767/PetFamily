@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Accounts.Application.Commands.Login;
 using PetFamily.Core.Abstractions;
+using PetFamily.Core.Models;
 using PetFamily.Framework;
 
 namespace PetFamily.Accounts.Presentation.Login;
@@ -29,7 +30,7 @@ public class AccountsController : ControllerBase
             return result.Error.ToErrorResponse();
         }
 
-        return Ok(result.Value);
+        return Ok(Envelop.Ok(result.Value));
     }
 }
 

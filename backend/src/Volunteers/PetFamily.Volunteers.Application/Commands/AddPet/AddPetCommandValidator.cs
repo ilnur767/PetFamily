@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using PetFamily.Core.Validation;
 using PetFamily.SharedKernel.Common;
+using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.Volunteers.Domain.ValueObjects;
 using static PetFamily.SharedKernel.Common.DataLimitsConstants;
 

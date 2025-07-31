@@ -4,7 +4,7 @@ using PetFamily.SharedKernel.Common;
 using static PetFamily.SharedKernel.Common.ValidationMessageConstants;
 using static PetFamily.SharedKernel.Common.Errors;
 
-namespace PetFamily.Volunteers.Domain.ValueObjects;
+namespace PetFamily.SharedKernel.ValueObjects;
 
 public class Requisite : ComparableValueObject
 {
