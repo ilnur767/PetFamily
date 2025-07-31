@@ -9,5 +9,4 @@ public interface IUnitOfWork
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 
     Task RollbackAsync(CancellationToken cancellationToken = default);
-
 }
