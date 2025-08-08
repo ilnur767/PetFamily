@@ -30,14 +30,14 @@ public class PermissionManager
         await _accountsDbContext.SaveChangesAsync();
     }
 
-    public async Task<HashSet<string>> GetUserPermissions(Guid userId)
+    public async Task<HashSet<string>> GetUserPermissions(Guid userId, CancellationToken cancellationToken)
     {
         var permissions = await _accountsDbContext.Users
             .Where(u => u.Id == userId)
             .SelectMany(u => u.Roles)
             .SelectMany(r => r.RolePermissions)
             .Select(rp => rp.Permission.Code)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return permissions.ToHashSet();
     }

@@ -23,6 +23,7 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<AdminAccount> AdminAccounts { get; set; }
     public DbSet<VolunteerAccount> VolunteerAccounts { get; set; }
     public DbSet<ParticipantAccount> ParticipantAccounts { get; set; }
+    public DbSet<RefreshSession> RefreshSessions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -44,6 +45,7 @@ public class AccountsDbContext : IdentityDbContext<User, Role, Guid>
         modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         modelBuilder.ApplyConfiguration(new VolunteerAccountConfiguration());
         modelBuilder.ApplyConfiguration(new ParticipantAccountConfiguration());
+        modelBuilder.ApplyConfiguration(new RefreshSessionConfiguration());
 
         modelBuilder.Entity<IdentityUserClaim<Guid>>()
             .ToTable("user_claims");

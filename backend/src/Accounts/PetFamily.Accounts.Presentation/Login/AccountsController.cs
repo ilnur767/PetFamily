@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFamily.Accounts.Application.Commands.Login;
+using PetFamily.Accounts.Contracts.Responses;
+using PetFamily.Accounts.Presentation.Extensions;
 using PetFamily.Core.Abstractions;
 using PetFamily.Core.Models;
 using PetFamily.Framework;
@@ -8,9 +10,9 @@ namespace PetFamily.Accounts.Presentation.Login;
 
 public class AccountsController : ControllerBase
 {
-    private readonly ICommandHandler<string, LoginUserCommand> _loginUserCommandHandler;
+    private readonly ICommandHandler<LoginResponse, LoginUserCommand> _loginUserCommandHandler;
 
-    public AccountsController(ICommandHandler<string, LoginUserCommand> loginUserCommandHandler)
+    public AccountsController(ICommandHandler<LoginResponse, LoginUserCommand> loginUserCommandHandler)
     {
         _loginUserCommandHandler = loginUserCommandHandler;
     }
@@ -30,10 +32,10 @@ public class AccountsController : ControllerBase
             return result.Error.ToErrorResponse();
         }
 
+        Response.Cookies.SetRefreshToken(result.Value.RefreshToken);
+
         return Ok(Envelop.Ok(result.Value));
     }
 }
-
-public record RegisterRequest(string Email, string UserName, string Password);
 
 public record LoginUserRequest(string Email, string Password);
