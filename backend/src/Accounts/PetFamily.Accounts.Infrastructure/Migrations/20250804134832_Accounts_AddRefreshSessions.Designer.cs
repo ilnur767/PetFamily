@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PetFamily.Accounts.Infrastructure.DbContexts;
@@ -12,9 +13,11 @@ using PetFamily.Accounts.Infrastructure.DbContexts;
 namespace PetFamily.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsDbContext))]
-    partial class AccountsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250804134832_Accounts_AddRefreshSessions")]
+    partial class Accounts_AddRefreshSessions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,10 +246,6 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expires_in");
 
-                    b.Property<Guid>("Jti")
-                        .HasColumnType("uuid")
-                        .HasColumnName("jti");
-
                     b.Property<Guid>("RefreshToken")
                         .HasColumnType("uuid")
                         .HasColumnName("refresh_token");
@@ -256,12 +255,12 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_refresh_session");
+                        .HasName("pk_refresh_sessions");
 
                     b.HasIndex("UserId")
-                        .HasDatabaseName("ix_refresh_session_user_id");
+                        .HasDatabaseName("ix_refresh_sessions_user_id");
 
-                    b.ToTable("refresh_session", "accounts");
+                    b.ToTable("refresh_sessions", "accounts");
                 });
 
             modelBuilder.Entity("PetFamily.Accounts.Domain.Role", b =>
@@ -542,7 +541,7 @@ namespace PetFamily.Accounts.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_refresh_session_users_user_id");
+                        .HasConstraintName("fk_refresh_sessions_users_user_id");
 
                     b.Navigation("User");
                 });

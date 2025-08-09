@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using PetFamily.Accounts.Application.Abstractions;
+using PetFamily.Accounts.Contracts.Responses;
 using PetFamily.Accounts.Domain;
 using PetFamily.Core.Abstractions;
 using PetFamily.SharedKernel.Common;
 
 namespace PetFamily.Accounts.Application.Commands.Login;
 
-public class LoginHandler : ICommandHandler<string, LoginUserCommand>
+public class LoginHandler : ICommandHandler<LoginResponse, LoginUserCommand>
 {
     private readonly ILogger<LoginHandler> _logger;
     private readonly ITokenProvider _tokenProvider;
@@ -21,7 +22,7 @@ public class LoginHandler : ICommandHandler<string, LoginUserCommand>
         _tokenProvider = tokenProvider;
     }
 
-    public async Task<Result<string, ErrorList>> Handle(LoginUserCommand userCommand, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse, ErrorList>> Handle(LoginUserCommand userCommand, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(userCommand.Email);
 
@@ -37,11 +38,12 @@ public class LoginHandler : ICommandHandler<string, LoginUserCommand>
             return Errors.User.InvalidCredentials().ToErrorList();
         }
 
-        var token = await _tokenProvider.GenerateAccessToken(user, cancellationToken);
+        var result = await _tokenProvider.GenerateAccessToken(user, cancellationToken);
+        var refreshToken = await _tokenProvider.GenerateRefreshToken(user, result.Jti, cancellationToken);
 
         _logger.LogInformation($"User '{user.Email}' logged in.");
 
-        return token;
+        return new LoginResponse(result.AccessToken, refreshToken);
     }
 }
 

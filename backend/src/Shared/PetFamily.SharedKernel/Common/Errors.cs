@@ -38,6 +38,11 @@ public static class Errors
         {
             return Error.NotFound("record.already.exists", "Record already exists");
         }
+
+        public static Error Failure()
+        {
+            return Error.Failure("failure", "failure");
+        }
     }
 
     public static class User
@@ -45,6 +50,19 @@ public static class Errors
         public static Error InvalidCredentials()
         {
             return Error.Validation("credentials.is.invalid", "Your credentials is invalid");
+        }
+    }
+
+    public static class Tokens
+    {
+        public static Error ExpiredToken()
+        {
+            return Error.Validation("token.is.expired", "Your token is expired");
+        }
+
+        public static Error InvalidToken()
+        {
+            return Error.Validation("token.is.invalid", "Your token is invalid");
         }
     }
 }

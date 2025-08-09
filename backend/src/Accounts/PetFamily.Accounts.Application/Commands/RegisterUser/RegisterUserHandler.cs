@@ -49,7 +49,7 @@ public sealed class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
 
         try
         {
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            var transaction = _unitOfWork.BeginTransactionAsync(cancellationToken);
 
             var result = await _userManager.CreateAsync(user, command.Password);
 
@@ -62,7 +62,7 @@ public sealed class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
                 return new ErrorList(errors);
             }
 
-            var roleResult =await _userManager.AddToRoleAsync(user, ParticipantAccount.PARTICIPANT);
+            var roleResult = await _userManager.AddToRoleAsync(user, ParticipantAccount.PARTICIPANT);
 
             if (roleResult.Succeeded == false)
             {

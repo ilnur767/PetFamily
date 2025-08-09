@@ -1,4 +1,4 @@
-namespace PetFamily.Accounts.Infrastructure;
+namespace PetFamily.Framework.Authorization;
 
 public class JwtOptions
 {
